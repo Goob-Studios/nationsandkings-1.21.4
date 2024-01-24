@@ -2,17 +2,17 @@
 	"schemaVersion": 1,
 	"id": "nationsandkings",
 	"version": "${version}",
-	"name": "NationsAndKings",
+	"name": "Nations and Kings",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Me!"
+		"ninjadude75, "
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/nationsandkings/icon.png",
+	"icon": "assets/nationsandkings/smallnandk.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
