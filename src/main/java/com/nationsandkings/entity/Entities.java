@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 
 public class Entities {
 
-    private static final EntityType<GenericVillagerEntity> GENERIC_VILLAGER = Registry.register(Registries.ENTITY_TYPE,
+    public static final EntityType<GenericVillagerEntity> GENERIC_VILLAGER = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(NationsAndKings.MOD_ID, "genericvillager"), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GenericVillagerEntity::new)
                     .dimensions(EntityDimensions.fixed(1f, 2f)).build());
 
