@@ -5,14 +5,18 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.MathHelper;
 
 // Made with Blockbench 4.9.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class villager_pillager_generic_model<T extends GenericVillagerEntity> extends SinglePartEntityModel<T> {
 	private final ModelPart villager_pillager_generic;
+
+	private final ModelPart head;
 	public villager_pillager_generic_model(ModelPart root) {
 		this.villager_pillager_generic = root.getChild("villager_pillager_generic");
+		this.head = root.getChild("villager_pillager_generic").getChild("torso").getChild("head");
 	}
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
@@ -35,6 +39,15 @@ public class villager_pillager_generic_model<T extends GenericVillagerEntity> ex
 	}
 	@Override
 	public void setAngles(GenericVillagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.getPart().traverse().forEach(ModelPart::resetTransform);
+		this.setHeadAngles(netHeadYaw, headPitch);
+	}
+	private void setHeadAngles(float headYaw, float headPitch){
+		headYaw = MathHelper.clamp(headYaw, -30.F, 30.0F);
+		headPitch = MathHelper.clamp(headPitch, -25.0F, 45.0F);
+
+		this.head.yaw = headYaw * 0.017453292F;
+		this.head.pitch = headPitch * 0.017453292F;
 	}
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {

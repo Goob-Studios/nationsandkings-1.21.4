@@ -16,7 +16,7 @@ public class GenericVillagerRenderer extends MobEntityRenderer<GenericVillagerEn
 
     @Override
     public Identifier getTexture(GenericVillagerEntity entity) {
-        return new Identifier(NationsAndKings.MOD_ID, "textures/entity/generic_villager/texture.png");
+        return new Identifier(NationsAndKings.MOD_ID, "textures/entities/generic_villager/texture.png");
     }
 
     //Override is here to prepare for children in the future - for now it is unused.
