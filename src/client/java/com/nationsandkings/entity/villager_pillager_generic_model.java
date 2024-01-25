@@ -14,9 +14,14 @@ public class villager_pillager_generic_model<T extends GenericVillagerEntity> ex
 	private final ModelPart villager_pillager_generic;
 
 	private final ModelPart head;
+
+	//meant to allow the item to be rendered in the villager's hand - not yet implemented
+	private final ModelPart right_arm;
 	public villager_pillager_generic_model(ModelPart root) {
 		this.villager_pillager_generic = root.getChild("villager_pillager_generic");
 		this.head = root.getChild("villager_pillager_generic").getChild("torso").getChild("head");
+		this.right_arm = root.getChild("villager_pillager_generic").getChild("right_arm");
+
 	}
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
@@ -52,6 +57,7 @@ public class villager_pillager_generic_model<T extends GenericVillagerEntity> ex
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		villager_pillager_generic.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
 	}
 
 	@Override
