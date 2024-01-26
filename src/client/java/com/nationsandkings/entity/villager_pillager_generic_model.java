@@ -1,5 +1,6 @@
 package com.nationsandkings.entity;
 
+import com.nationsandkings.entity.animation.genericVillagerAnim;
 import com.nationsandkings.entity.custom.GenericVillagerEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -48,6 +49,9 @@ public class villager_pillager_generic_model<T extends GenericVillagerEntity> ex
 	public void setAngles(GenericVillagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.getPart().traverse().forEach(ModelPart::resetTransform);
 		this.setHeadAngles(netHeadYaw, headPitch);
+
+		this.animateMovement(genericVillagerAnim.GENERIC_WALK, limbSwing, limbSwingAmount, 1f, 1f);
+
 	}
 	private void setHeadAngles(float headYaw, float headPitch){
 		headYaw = MathHelper.clamp(headYaw, -30.F, 30.0F);
