@@ -12,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PatrolEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.world.World;
 
 import java.util.Set;
@@ -21,14 +22,37 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public static final Set<Block> INTERACT_BLOCKS = null;
 
     private boolean hasJob;
+    private int timeout = 300;
+
+    //max is 20, lowest is 0
+    //rimworld style mood breaks?
+    //If the happiness is low enough, villagers will refuse to trade. Essentially, say goodbye to
+    //trading halls, at least in their current form.
+    private double happiness;
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         hasJob = false;
+        happiness = 20;
     }
 
     @Override
     public void tick() {
         super.tick();
+
+        //particle stuff
+        // 20 is temporary to test if the logic works
+        if(this.happiness == 20 && timeout == 0){
+                this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
+                        this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
+            this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
+                    this.getX()-0.5,getY() , getZ() - 0.5, 0.5, 0.5, 0.5);
+            this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
+                    this.getX(),getY()+0.5, getZ(), 0.5, 0.5, 0.5);
+            timeout = 300;
+        }
+        else{
+            timeout--;
+        }
     }
 
     @Override
@@ -60,4 +84,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     private void attack(){
 
     }
+
+    private double checkHappiness(){
+
+    }
+
+
 }
