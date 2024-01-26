@@ -52,4 +52,12 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public boolean getHasJob(){
         return hasJob;
     }
+
+    private void sleep(){
+
+    }
+
+    private void attack(){
+
+    }
 }
