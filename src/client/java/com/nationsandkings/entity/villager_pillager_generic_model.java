@@ -5,6 +5,8 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 // Made with Blockbench 4.9.3
@@ -58,12 +60,15 @@ public class villager_pillager_generic_model<T extends GenericVillagerEntity> ex
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		villager_pillager_generic.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
+
 	}
 
 	@Override
 	public ModelPart getPart() {
 		return villager_pillager_generic;
 	}
+
+
 
 
 }
