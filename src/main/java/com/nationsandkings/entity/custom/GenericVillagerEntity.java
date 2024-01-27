@@ -1,5 +1,7 @@
 package com.nationsandkings.entity.custom;
 
+import com.nationsandkings.NationsAndKings;
+import com.nationsandkings.entity.ai.VillagerGenericSleep;
 import com.nationsandkings.entity.ai.VillagerWorkGoal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -39,9 +41,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public void tick() {
         super.tick();
 
+
         //particle stuff
         // 20 is temporary to test if the logic works
-        if(this.happiness == 20 && timeout == 0){
+        if(checkHappiness() == 0 && timeout == 0){
                 this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
                         this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
             this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
@@ -59,9 +62,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new WanderAroundFarGoal(this, 0.5d));
-        this.goalSelector.add(2, new VillagerWorkGoal(this));
-        this.goalSelector.add(3, new LookAroundGoal(this));
+        this.goalSelector.add(1, new VillagerGenericSleep(this));
+        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5d));
+        this.goalSelector.add(3, new VillagerWorkGoal(this));
+        this.goalSelector.add(4, new LookAroundGoal(this));
 
 
     }
@@ -77,16 +81,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
         return hasJob;
     }
 
-    private void sleep(){
-
-    }
 
     private void attack(){
 
     }
 
     private double checkHappiness(){
-
+        return happiness;
     }
 
 
