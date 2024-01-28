@@ -3,7 +3,10 @@ package com.nationsandkings.entity.custom;
 import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.ai.VillagerGenericSleep;
 import com.nationsandkings.entity.ai.VillagerWorkGoal;
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.StopFollowingCustomerGoal;
@@ -15,6 +18,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PatrolEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Set;
@@ -26,6 +30,12 @@ public class GenericVillagerEntity extends PathAwareEntity {
     private boolean hasJob;
     private int timeout = 300;
 
+    private boolean asleep;
+
+    //the location of each villager's home
+    //which is mostly just their bed for now
+    private BlockPos homeLocation;
+
     //max is 20, lowest is 0
     //rimworld style mood breaks?
     //If the happiness is low enough, villagers will refuse to trade. Essentially, say goodbye to
@@ -35,6 +45,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
         super(entityType, world);
         hasJob = false;
         happiness = 20;
+        asleep = false;
+
     }
 
     @Override
@@ -56,6 +68,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
         else{
             timeout--;
         }
+
+        if(homeLocation == null){
+            findHome();
+        }
     }
 
     @Override
@@ -63,7 +79,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
         super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new VillagerGenericSleep(this));
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5d));
+        this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(3, new VillagerWorkGoal(this));
         this.goalSelector.add(4, new LookAroundGoal(this));
 
@@ -88,6 +104,36 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     private double checkHappiness(){
         return happiness;
+    }
+
+    public BlockPos getHomeLocation(){
+        return homeLocation;
+    }
+
+    public void setHomeLocation(BlockPos pos){
+        homeLocation = pos;
+    }
+
+    private void findHome(){
+        if(getHomeLocation() == null){
+            BlockPos villagerPos = new BlockPos((int) this.getX(), (int) this.getY(), (int) this.getZ());
+
+            for (int x = -5; x <= 5; x++) {
+                for (int y = -5; y <= 5; y++) {
+                    for (int z = -5; z <= 5; z++) {
+                        BlockPos checkPos = villagerPos.add(x, y, z);
+                        BlockState state = this.getWorld().getBlockState(checkPos);
+                        if (state.getBlock() instanceof BedBlock){
+                            this.setHomeLocation(checkPos);
+                            System.out.println("Found Pos");
+                            x = y = z = 21;
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
 
 
