@@ -14,6 +14,8 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PatrolEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -41,6 +43,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //If the happiness is low enough, villagers will refuse to trade. Essentially, say goodbye to
     //trading halls, at least in their current form.
     private double happiness;
+
+    private boolean isSleep = false;
+
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         hasJob = false;
@@ -75,7 +80,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
     @Override
-    protected void initGoals() {
+    public void initGoals() {
         super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new VillagerGenericSleep(this));
@@ -136,5 +141,17 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
+    @Override
+    public boolean damage(DamageSource source, float amount) {
 
+        return super.damage(source, amount);
+    }
+
+    public boolean getIsAsleep() {
+        return asleep;
+    }
+
+    public void setIsAsleep(boolean change){
+        isSleep = change;
+    }
 }
