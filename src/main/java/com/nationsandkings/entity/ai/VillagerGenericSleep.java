@@ -1,12 +1,9 @@
 package com.nationsandkings.entity.ai;
 
 import com.nationsandkings.entity.custom.GenericVillagerEntity;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.util.math.BlockPos;
+
 
 
 public class VillagerGenericSleep extends Goal {
@@ -39,9 +36,27 @@ public class VillagerGenericSleep extends Goal {
             if (path != null){
                 entity.getNavigation().startMovingAlong(path, 1.0);
                 System.out.println("Starting pathing");
+                if (entity.getBlockPos().equals(entity.getHomeLocation())) {
+                    entity.getNavigation().stop(); // Stop moving
+                    entity.clearGoalsAndTasks();
+                }
             }
         }
     }
+
+    @Override
+    public void stop() {
+        super.stop();
+        wakeUp();
+    }
+
+    public void wakeUp(){
+        entity.initGoals();
+        entity.setIsAsleep(false);
+        entity.initGoals();
+    }
+
+
 
 
 }
