@@ -87,8 +87,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         //targeting and the melee attack needs to be above this goal, so it can actively target the thing that
         //attacked it before it tries to sleep again.
-        sleepGoal = new VillagerGenericSleep(this);
-        this.goalSelector.add(1, sleepGoal);
+//        sleepGoal = new VillagerGenericSleep(this);
+//        this.goalSelector.add(1, sleepGoal);
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
         this.goalSelector.add(3, new VillagerWorkGoal(this));
         this.goalSelector.add(4, new LookAroundGoal(this));
