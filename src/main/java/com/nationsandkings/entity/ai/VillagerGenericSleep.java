@@ -41,6 +41,9 @@ public class VillagerGenericSleep extends Goal {
                     entity.clearGoalsAndTasks();
                 }
             }
+            else{
+                entity.decreaseHappiness(5);
+            }
         }
     }
 
