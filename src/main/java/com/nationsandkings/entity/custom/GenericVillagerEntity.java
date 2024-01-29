@@ -96,10 +96,16 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
+    public void keepSleep(){
+        this.goalSelector.add(0, new SwimGoal(this));
+        sleepGoal = new VillagerGenericSleep(this);
+        this.goalSelector.add(1, sleepGoal);
+    }
+
     public static DefaultAttributeContainer.Builder createGenericVillagerAttributes(){
         return PathAwareEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1);
     }
 

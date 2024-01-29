@@ -39,6 +39,7 @@ public class VillagerGenericSleep extends Goal {
                 if (entity.getBlockPos().equals(entity.getHomeLocation())) {
                     entity.getNavigation().stop(); // Stop moving
                     entity.clearGoalsAndTasks();
+                    entity.keepSleep();
                 }
             }
             else{
@@ -54,7 +55,11 @@ public class VillagerGenericSleep extends Goal {
     }
 
     public void wakeUp(){
+        //maybe clearing just to make sure
+        //not sure if this is needed - may break everything?
+        entity.clearGoalsAndTasks();
         entity.initGoals();
+        System.out.println("Waking up for the next day");
         entity.setIsAsleep(false);
         entity.initGoals();
     }
