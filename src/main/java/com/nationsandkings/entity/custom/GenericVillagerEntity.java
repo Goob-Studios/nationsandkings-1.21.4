@@ -46,6 +46,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     private boolean isSleep = false;
 
+    private VillagerGenericSleep sleepGoal;
+
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         hasJob = false;
@@ -83,7 +85,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public void initGoals() {
         super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new VillagerGenericSleep(this));
+        //targeting and the melee attack needs to be above this goal, so it can actively target the thing that
+        //attacked it before it tries to sleep again.
+        sleepGoal = new VillagerGenericSleep(this);
+        this.goalSelector.add(1, sleepGoal);
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(3, new VillagerWorkGoal(this));
         this.goalSelector.add(4, new LookAroundGoal(this));
@@ -105,6 +110,14 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     private void attack(){
 
+    }
+
+    public void increaseHappiness(int amount){
+        happiness = happiness + amount;
+    }
+
+    public void decreaseHappiness(int amount){
+        happiness = happiness - amount;
     }
 
     private double checkHappiness(){
@@ -144,6 +157,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
 
+        //Should wake the villager up when hit
+        sleepGoal.wakeUp();
         return super.damage(source, amount);
     }
 
