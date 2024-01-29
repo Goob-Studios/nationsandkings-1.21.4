@@ -34,12 +34,10 @@ public class VillagerGenericSleep extends Goal {
         if (entity.getHomeLocation() != null){
             Path path = entity.getNavigation().findPathTo(entity.getHomeLocation(), 50);
             if (path != null){
-                entity.getNavigation().startMovingAlong(path, 1.0);
+                entity.getNavigation().startMovingAlong(path, 0.5);
                 System.out.println("Starting pathing");
                 if (entity.getBlockPos().equals(entity.getHomeLocation())) {
-                    entity.getNavigation().stop(); // Stop moving
-                    entity.clearGoalsAndTasks();
-                    entity.keepSleep();
+                    entity.setIsAsleep(true);
                 }
             }
             else{
@@ -51,18 +49,16 @@ public class VillagerGenericSleep extends Goal {
     @Override
     public void stop() {
         super.stop();
-        wakeUp();
+
     }
 
-    public void wakeUp(){
-        //maybe clearing just to make sure
-        //not sure if this is needed - may break everything?
-        entity.clearGoalsAndTasks();
-        entity.initGoals();
-        System.out.println("Waking up for the next day");
-        entity.setIsAsleep(false);
-        entity.initGoals();
+    @Override
+    public void tick() {
+        super.tick();
+
     }
+
+
 
 
 

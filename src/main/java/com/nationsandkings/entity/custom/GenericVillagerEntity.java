@@ -44,7 +44,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //trading halls, at least in their current form.
     private double happiness;
 
-    private boolean isSleep = false;
+
 
     private VillagerGenericSleep sleepGoal;
 
@@ -89,7 +89,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
         //attacked it before it tries to sleep again.
         sleepGoal = new VillagerGenericSleep(this);
         this.goalSelector.add(1, sleepGoal);
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0));
+        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
         this.goalSelector.add(3, new VillagerWorkGoal(this));
         this.goalSelector.add(4, new LookAroundGoal(this));
 
@@ -164,7 +164,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public boolean damage(DamageSource source, float amount) {
 
         //Should wake the villager up when hit
-        sleepGoal.wakeUp();
+        if(asleep){
+            sleepGoal.stop();
+        }
         return super.damage(source, amount);
     }
 
@@ -173,6 +175,6 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
     public void setIsAsleep(boolean change){
-        isSleep = change;
+        asleep = change;
     }
 }
