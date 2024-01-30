@@ -2,6 +2,7 @@ package com.nationsandkings.entity.custom;
 
 import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.ai.VillagerGenericSleep;
+import com.nationsandkings.entity.ai.VillagerSchedulingGoal;
 import com.nationsandkings.entity.ai.VillagerWorkGoal;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
@@ -42,7 +43,12 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //rimworld style mood breaks?
     //If the happiness is low enough, villagers will refuse to trade. Essentially, say goodbye to
     //trading halls, at least in their current form.
-    private double happiness;
+
+    //an integer for what time the villager needs to go to bed
+
+    //Sleeptime is value 0
+    //happiness is value 1
+    private int[] VillagerArray = new int[5];
 
 
 
@@ -51,8 +57,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         hasJob = false;
-        happiness = 20;
+
         asleep = false;
+
+
 
     }
 
@@ -63,7 +71,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
         //particle stuff
         // 20 is temporary to test if the logic works
-        if(checkHappiness() == 0 && timeout == 0){
+        if(VillagerArray[1] == 0 && timeout == 0){
                 this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
                         this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
             this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
@@ -79,6 +87,17 @@ public class GenericVillagerEntity extends PathAwareEntity {
         if(homeLocation == null){
             findHome();
         }
+
+        if(VillagerArray[0] == 0 || this.getWorld().getTimeOfDay() == 0){
+            VillagerArray[0] = (int) ((Math.random() * (13100 - 12900)) + 12900);
+
+        }
+
+        if(VillagerArray[1] == 0.0){
+            VillagerArray[1] = 20;
+        }
+
+
     }
 
     @Override
@@ -89,6 +108,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
         //attacked it before it tries to sleep again.
 //        sleepGoal = new VillagerGenericSleep(this);
 //        this.goalSelector.add(1, sleepGoal);
+        this.goalSelector.add(1, new VillagerSchedulingGoal(this));
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
         this.goalSelector.add(3, new VillagerWorkGoal(this));
         this.goalSelector.add(4, new LookAroundGoal(this));
@@ -119,16 +139,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
     public void increaseHappiness(int amount){
-        happiness = happiness + amount;
+        VillagerArray[1] = VillagerArray[1] + amount;
     }
 
     public void decreaseHappiness(int amount){
-        happiness = happiness - amount;
+        VillagerArray[1] = VillagerArray[1] - amount;
     }
 
-    private double checkHappiness(){
-        return happiness;
-    }
 
     public BlockPos getHomeLocation(){
         return homeLocation;
@@ -176,5 +193,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public void setIsAsleep(boolean change){
         asleep = change;
+    }
+
+    public int getSleepTime() {
+        return VillagerArray[0];
+    }
+
+    public void setSleepTime(int sleepTime) {
+        VillagerArray[0] = sleepTime;
     }
 }
