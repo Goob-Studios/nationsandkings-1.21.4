@@ -1,5 +1,6 @@
 package com.nationsandkings;
 
+import com.nationsandkings.entity.Entities;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -21,5 +22,8 @@ public class NationsAndKings implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
+
+		LOGGER.info("Registering Mod Entities");
+		Entities.RegisterModEntities();
 	}
 }
