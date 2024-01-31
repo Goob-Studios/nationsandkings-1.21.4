@@ -36,4 +36,15 @@ public class VillagerSchedulingGoal extends Goal {
             System.out.println("Time for Sleep");
         }
     }
+
+    //The function for the villagers to sleep
+    private void sleep(){
+
+    }
+
+
+    //Right now, it's just a generic work function.
+    private void work(){
+
+    }
 }
