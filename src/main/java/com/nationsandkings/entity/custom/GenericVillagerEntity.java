@@ -20,6 +20,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PatrolEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,6 +39,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //the location of each villager's home
     //which is mostly just their bed for now
     private BlockPos homeLocation;
+
+    private final SimpleInventory inventory = new SimpleInventory(30);
 
     //max is 20, lowest is 0
     //rimworld style mood breaks?
