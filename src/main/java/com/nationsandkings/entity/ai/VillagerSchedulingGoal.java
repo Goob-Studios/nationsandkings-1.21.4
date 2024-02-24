@@ -41,9 +41,8 @@ public class VillagerSchedulingGoal extends Goal {
     //The function for the villagers to sleep
     //At a certain time, we'll call the sleep function, and they'll pathfind to their home location
     //then we'll play the sleeping anim
-    //Resting isn't just sleeping, the villagers will hang out at their home and mill around, talk to villagers
-    //and even go to the tavern
-    private void rest(){
+
+    private void sleep(){
 
     }
 
@@ -54,4 +53,10 @@ public class VillagerSchedulingGoal extends Goal {
     private void work(){
 
     }
+
+    private void relax(){
+
+    }
+
+
 }
