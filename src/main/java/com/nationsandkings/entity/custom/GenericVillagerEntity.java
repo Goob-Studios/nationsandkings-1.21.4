@@ -40,6 +40,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //which is mostly just their bed for now
     private BlockPos homeLocation;
 
+    private String[] VillagerJobs = new String[5];
+
+
     private final SimpleInventory inventory = new SimpleInventory(30);
 
     //max is 20, lowest is 0
