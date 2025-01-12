@@ -5,7 +5,7 @@ import com.nationsandkings.entity.custom.GenericVillagerEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -13,7 +13,7 @@ import net.minecraft.util.math.MathHelper;
 // Made with Blockbench 4.9.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class generic_villager_v2 <T extends GenericVillagerEntity> extends SinglePartEntityModel<T> {
+public class generic_villager_v2<T extends GenericVillagerEntity> extends EntityModel<T> {
 	private final ModelPart villager_pillager_generic;
 
 	//	private final ModelPart torso;

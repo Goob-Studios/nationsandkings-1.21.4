@@ -62,11 +62,6 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-        hasJob = false;
-
-        asleep = false;
-
-
 
     }
 
@@ -131,9 +126,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public static DefaultAttributeContainer.Builder createGenericVillagerAttributes(){
         return PathAwareEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1);
+                .add(EntityAttributes.MAX_HEALTH, 20)
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.5)
+                .add(EntityAttributes.ATTACK_DAMAGE, 1);
     }
 
     public boolean getHasJob(){
@@ -184,15 +179,6 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-
-        //Should wake the villager up when hit
-        if(asleep){
-            sleepGoal.stop();
-        }
-        return super.damage(source, amount);
-    }
 
     public boolean getIsAsleep() {
         return asleep;
