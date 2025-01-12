@@ -25,6 +25,8 @@ public class generic_villager_v2<T extends GenericVillagerEntity> extends Entity
 	private final ModelPart right_leg;
 	//There is no default constructor we can call on I think
 	public generic_villager_v2(ModelPart root) {
+        super(root);
+
         this.villager_pillager_generic = root.getChild("com.nationsandkings.entity.villager_pillager_generic");
 		this.head = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("torso").getChild("head");
 		this.left_arm = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("left_arm");
@@ -53,12 +55,13 @@ public class generic_villager_v2<T extends GenericVillagerEntity> extends Entity
 		ModelPartData right_leg = villager_pillager_generic.addChild("right_leg", ModelPartBuilder.create().uv(32, 32).cuboid(-4.0F, -12.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
-	@Override
+
 	public void setAngles(GenericVillagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.getPart().traverse().forEach(ModelPart::resetTransform);
 		this.setHeadAngles(netHeadYaw, headPitch);
 
-		this.animateMovement(genericVillagerAnim.GENERIC_WALK, limbSwing, limbSwingAmount, 1f, 1f);
+		//Need to find a way to setAngles
+//		this.animateMovement(genericVillagerAnim.GENERIC_WALK, limbSwing, limbSwingAmount, 1f, 1f);
 
 	}
 	private void setHeadAngles(float headYaw, float headPitch){
@@ -68,14 +71,14 @@ public class generic_villager_v2<T extends GenericVillagerEntity> extends Entity
 		this.head.yaw = headYaw * 0.017453292F;
 		this.head.pitch = headPitch * 0.017453292F;
 	}
-	@Override
+
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		villager_pillager_generic.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		villager_pillager_generic.render(matrices, vertexConsumer, light, overlay);
 
 
 	}
 
-	@Override
+
 	public ModelPart getPart() {
 		return villager_pillager_generic;
 	}
