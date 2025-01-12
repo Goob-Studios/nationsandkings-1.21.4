@@ -21,4 +21,6 @@ public class ModBlocks {
 
         return Registry.register(Registries.BLOCK, id, block);
     }
+
+    public static void initialize() {}
 }
