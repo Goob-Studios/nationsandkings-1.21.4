@@ -78,6 +78,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
         //particle stuff
         // 20 is temporary to test if the logic works
         if(VillagerArray[1] == 0 && timeout == 0){
+            //There is a better way to do this
                 this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
                         this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
             this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
