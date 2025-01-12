@@ -20,6 +20,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PatrolEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,6 +39,11 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //the location of each villager's home
     //which is mostly just their bed for now
     private BlockPos homeLocation;
+
+    private String[] VillagerJobs = new String[5];
+
+
+    private final SimpleInventory inventory = new SimpleInventory(30);
 
     //max is 20, lowest is 0
     //rimworld style mood breaks?
@@ -72,6 +78,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
         //particle stuff
         // 20 is temporary to test if the logic works
         if(VillagerArray[1] == 0 && timeout == 0){
+            //There is a better way to do this
                 this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
                         this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
             this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,

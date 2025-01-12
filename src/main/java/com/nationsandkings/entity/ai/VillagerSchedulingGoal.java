@@ -2,6 +2,7 @@ package com.nationsandkings.entity.ai;
 
 import com.nationsandkings.entity.custom.GenericVillagerEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.passive.VillagerEntity;
 
 //this is the goal for scheduling.
 // Villagers will have a random timing to complete tasks, but
@@ -36,4 +37,28 @@ public class VillagerSchedulingGoal extends Goal {
             System.out.println("Time for Sleep");
         }
     }
+
+    //The function for the villagers to sleep
+    //At a certain time, we'll call the sleep function, and they'll pathfind to their home location
+    //then we'll play the sleeping anim
+
+    private void sleep(){
+
+    }
+
+
+    //Right now, it's just a generic work function.
+    //How we'll get the job I don't know - I'd rather not do a bunch of generic functions or do a switch statement
+    //but I'd kinda have to I think
+    private void work(){
+
+    }
+
+    private void relax(){
+
+    }
+
+
+
+
 }
