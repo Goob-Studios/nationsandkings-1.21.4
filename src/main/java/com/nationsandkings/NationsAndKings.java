@@ -1,5 +1,6 @@
 package com.nationsandkings;
 
+import com.nationsandkings.blocks.ModBlocks;
 import com.nationsandkings.entity.Entities;
 import net.fabricmc.api.ModInitializer;
 
@@ -25,5 +26,8 @@ public class NationsAndKings implements ModInitializer {
 
 		LOGGER.info("Registering Mod Entities");
 		Entities.RegisterModEntities();
+
+		LOGGER.info("Registering Mod Blocks");
+		ModBlocks.initialize();
 	}
 }
