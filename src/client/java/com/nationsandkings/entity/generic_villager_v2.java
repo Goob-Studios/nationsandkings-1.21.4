@@ -6,6 +6,7 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -13,20 +14,26 @@ import net.minecraft.util.math.MathHelper;
 // Made with Blockbench 4.9.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class generic_villager_v2<T extends GenericVillagerEntity> extends EntityModel<T> {
+public class generic_villager_v2<T extends GenericVillagerEntity> extends EntityModel<EntityRenderState> {
 	private final ModelPart villager_pillager_generic;
 
 	//	private final ModelPart torso;
 	private final ModelPart head;
-//	private final ModelPart left_arm;
-//	private final ModelPart right_arm;
-//	private final ModelPart left_leg;
-//	private final ModelPart right_leg;
+	private final ModelPart left_arm;
+	private final ModelPart right_arm;
+	private final ModelPart left_leg;
+	private final ModelPart right_leg;
+	//There is no default constructor we can call on I think
 	public generic_villager_v2(ModelPart root) {
-		this.villager_pillager_generic = root.getChild("com.nationsandkings.entity.villager_pillager_generic");
+        this.villager_pillager_generic = root.getChild("com.nationsandkings.entity.villager_pillager_generic");
 		this.head = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("torso").getChild("head");
+		this.left_arm = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("left_arm");
+		this.right_arm = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("right_arm");
+        this.left_leg = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("left_leg");
+        this.right_leg = root.getChild("com.nationsandkings.entity.villager_pillager_generic").getChild("right_leg");
+    }
 
-	}
+	//This needs to be moved to the getTexture function in the Renderer
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();

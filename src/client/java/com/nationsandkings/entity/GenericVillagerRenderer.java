@@ -24,4 +24,8 @@ public class GenericVillagerRenderer extends MobEntityRenderer<GenericVillagerEn
     public void render(GenericVillagerEntity mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         super.render(mobEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
+
+    //Need to put the get texture function here now
+
+    private
 }
