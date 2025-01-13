@@ -29,7 +29,11 @@ public class ModBlocks {
     }
 
     //Registering blocks here
-    public static final Block TOWN_HALL = register(new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL)), "town_hall", true);
+    public static final Block TOWN_HALL = register(
+            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL)),
+            "town_hall",
+            true
+    );
 
     public static void initialize() {
 
