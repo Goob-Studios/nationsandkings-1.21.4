@@ -23,6 +23,8 @@ public class ModBlocks {
 
     //Fabric Block Documentation: https://docs.fabricmc.net/develop/blocks/first-block
     // This is just for basic blocks, and not block entities. For now I'm implementing the work stations as a basic blocks
+
+    //The block name and shouldRegisterItem are all null for some reason, despite them being passed in below.
     public static Block register(Block block, String name, boolean shouldRegisterItem) {
         //They have a factory instead of an Identifier
         Identifier id = Identifier.of(NationsAndKings.MOD_ID, name);
