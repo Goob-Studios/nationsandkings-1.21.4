@@ -4,6 +4,7 @@ import com.nationsandkings.NationsAndKings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -12,6 +13,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+
 
 
 public class ModBlocks {
@@ -23,6 +25,9 @@ public class ModBlocks {
 
     //The block name and shouldRegisterItem are all null for some reason, despite them being passed in below.
     private static Block register(Block block, String name, boolean shouldRegisterItem) {
+        System.out.println("BLOCK: " + block);
+        System.out.println("Name: " + name);
+        System.out.println("ShouldRegisterItem: " + shouldRegisterItem);
         //They have a factory instead of an Identifier
         Identifier id = Identifier.of(NationsAndKings.MOD_ID, name);
 
@@ -41,13 +46,13 @@ public class ModBlocks {
     //Registering blocks here
 
     public static final Block TOWN_HALL = register(
-            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL)),
+            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRASS)),
             "town_hall",
             true
     );
 
     public static final Block BUTCHER_BLOCK = register(
-            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD)),
+            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRASS)),
             "butcher_block",
             true
     );
