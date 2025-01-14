@@ -44,7 +44,9 @@ public class ModBlocks {
 //            Registry.register(Registries.ITEM, id, blockItem);
 //            ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL)
 //                    .register((itemGroup) -> itemGroup.add(blockItem));
-//            final RegistryKey<BlockItem> itemKey =
+//            final RegistryKey<BlockItem> blockItem = RegistryKey.of()
+
+
         }
         //This is the same as the built-in class
         final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(NationsAndKings.MOD_ID, name));
