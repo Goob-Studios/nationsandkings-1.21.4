@@ -28,7 +28,8 @@ public class ModBlocks {
     // This is just for basic blocks, and not block entities. For now I'm implementing the work stations as a basic blocks
 
     //The block name and shouldRegisterItem are all null for some reason, despite them being passed in below.
-    private static Block register(String name, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings, boolean shouldRegisterItem) {
+    //String name, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings, boolean shouldRegisterItem
+    private static Block register(Block block, RegistryKey<Block> blockKey, boolean shouldRegisterItem) {
 //        NationsAndKings.LOGGER.info("BLOCK: " + block);
 //        NationsAndKings.LOGGER.info("Name: " + name);
 //        NationsAndKings.LOGGER.info("ShouldRegisterItem: " + shouldRegisterItem);
@@ -48,15 +49,33 @@ public class ModBlocks {
 //            ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
 //                entries.add(TOWN_HALL.asItem());
 //            });
+//            final RegistryKey<BlockItem> = RegistryKey.of()
+            RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, blockKey.getValue());
+
+            BlockItem blockItem = new BlockItem(block, new Item.Settings().registryKey(itemKey));
+            Registry.register(Registries.ITEM, itemKey, blockItem);
 
         }
         //This is the same as the built-in class
-        final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(NationsAndKings.MOD_ID, name));
-        return Blocks.register(registryKey, factory, settings);
+//        final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(NationsAndKings.MOD_ID, name));
+//        return Blocks.register(registryKey, factory, settings);
+        return Registry.register(Registries.BLOCK, blockKey, block);
     }
 
 
     //Registering blocks here
+
+    //First key
+    public static final RegistryKey<Block> TOWN_HALL_KEY = RegistryKey.of(
+            RegistryKeys.BLOCK,
+            Identifier.of(NationsAndKings.MOD_ID, "town_hall")
+    );
+
+    public static final Block TOWN_HALL = register(
+            new Block(AbstractBlock.Settings.create().registryKey(TOWN_HALL_KEY).sounds(BlockSoundGroup.METAL)),
+            TOWN_HALL_KEY,
+            true
+    );
 
 //    public static final Block TOWN_HALL = register(
 //            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRASS)),
@@ -64,9 +83,9 @@ public class ModBlocks {
 //            true
 //    );
 
-    public static final Block TOWN_HALL = register("town_hall", Block::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL), true);
+//    public static final Block TOWN_HALL = register("town_hall", Block::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL), true);
 
-    public static final Block BUTCHER_BLOCK = register("butcher_block", Block::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD), true);
+//    public static final Block BUTCHER_BLOCK = register("butcher_block", Block::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD), true);
 
 //    public static final Block BUTCHER_BLOCK = register(
 //            new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRASS)),
@@ -84,9 +103,13 @@ public class ModBlocks {
     public static void initialize() {
 
 //        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
-//            entries.add(ModBlocks.TOWN_HALL);
-////            entries.add(ModBlocks.BUTCHER_BLOCK);
+//            entries.add(ModBlocks.TOWN_HALL.asItem());
+//            entries.add(ModBlocks.BUTCHER_BLOCK);
 //        });
 
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register((itemGroup) -> {
+            itemGroup.add(ModBlocks.TOWN_HALL.asItem());
+        });
     }
 }
