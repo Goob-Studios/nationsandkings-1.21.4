@@ -25,9 +25,9 @@ public class ModBlocks {
 
     //The block name and shouldRegisterItem are all null for some reason, despite them being passed in below.
     private static Block register(Block block, String name, boolean shouldRegisterItem) {
-        System.out.println("BLOCK: " + block);
-        System.out.println("Name: " + name);
-        System.out.println("ShouldRegisterItem: " + shouldRegisterItem);
+        NationsAndKings.LOGGER.info("BLOCK: " + block);
+        NationsAndKings.LOGGER.info("Name: " + name);
+        NationsAndKings.LOGGER.info("ShouldRegisterItem: " + shouldRegisterItem);
         //They have a factory instead of an Identifier
         Identifier id = Identifier.of(NationsAndKings.MOD_ID, name);
 
@@ -43,6 +43,8 @@ public class ModBlocks {
         //This is the same as the built-in class
         return Registry.register(Registries.BLOCK, id, block);
     }
+
+
     //Registering blocks here
 
     public static final Block TOWN_HALL = register(
@@ -66,5 +68,9 @@ public class ModBlocks {
 
     public static void initialize() {
 
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
+            entries.add(ModBlocks.TOWN_HALL);
+            entries.add(ModBlocks.BUTCHER_BLOCK);
+        });
     }
 }
