@@ -20,18 +20,23 @@ import java.util.function.Function;
 //public static final Block TOWN_HALL;
 
 public class ModBlocks {
+
+    //Fabric Block Documentation: https://docs.fabricmc.net/develop/blocks/first-block
+    // This is just for basic blocks, and not block entities. For now I'm implementing the work stations as a basic blocks
     public static Block register(Block block, String name, boolean shouldRegisterItem) {
+        //They have a factory instead of an Identifier
         Identifier id = Identifier.of(NationsAndKings.MOD_ID, name);
 
 
         // Only used if we want to register the item - I think most of the time we will but who knows
+        //This is differnt than the blocks class but that's because I think they do it in the items class
         if (shouldRegisterItem) {
             BlockItem blockItem = new BlockItem(block, new Item.Settings());
             Registry.register(Registries.ITEM, id, blockItem);
             ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL)
                     .register((itemGroup) -> itemGroup.add(blockItem));
         }
-
+        //This is the same as the built-in class
         return Registry.register(Registries.BLOCK, id, block);
     }
     //Registering blocks here
