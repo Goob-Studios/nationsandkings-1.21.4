@@ -45,7 +45,9 @@ public class ModBlocks {
 //            ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL)
 //                    .register((itemGroup) -> itemGroup.add(blockItem));
 //            final RegistryKey<BlockItem> blockItem = RegistryKey.of()
-
+//            ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
+//                entries.add(TOWN_HALL.asItem());
+//            });
 
         }
         //This is the same as the built-in class
@@ -85,5 +87,6 @@ public class ModBlocks {
 //            entries.add(ModBlocks.TOWN_HALL);
 ////            entries.add(ModBlocks.BUTCHER_BLOCK);
 //        });
+
     }
 }
