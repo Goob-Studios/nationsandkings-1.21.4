@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.StopFollowingCustomerGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -62,7 +63,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-
+        this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
     }
 
     @Override
