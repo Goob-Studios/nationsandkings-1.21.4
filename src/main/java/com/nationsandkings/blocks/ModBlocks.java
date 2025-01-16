@@ -1,6 +1,7 @@
 package com.nationsandkings.blocks;
 
 import com.nationsandkings.NationsAndKings;
+import com.nationsandkings.items.ModItems;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -108,7 +109,7 @@ public class ModBlocks {
 //        });
 
 
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register((itemGroup) -> {
+        ItemGroupEvents.modifyEntriesEvent(ModItems.WORKSTATIONS_GROUP_KEY).register((itemGroup) -> {
             itemGroup.add(ModBlocks.TOWN_HALL.asItem());
         });
     }
