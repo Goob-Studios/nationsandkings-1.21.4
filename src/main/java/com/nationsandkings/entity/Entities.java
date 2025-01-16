@@ -28,6 +28,6 @@ public class Entities {
 
     public static void RegisterModEntities(){
         NationsAndKings.LOGGER.info("Registering entities for " + NationsAndKings.MOD_ID);
-        FabricDefaultAttributeRegistry.register(Entities.GENERIC_VILLAGER, GenericVillagerEntity.createGenericVillagerAttributes());
+        FabricDefaultAttributeRegistry.register(Entities.GENERIC_VILLAGER, GenericVillagerEntity.createAttributes());
     }
 }

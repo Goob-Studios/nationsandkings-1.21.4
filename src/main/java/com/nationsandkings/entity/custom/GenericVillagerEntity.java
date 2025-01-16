@@ -124,7 +124,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
         this.goalSelector.add(1, sleepGoal);
     }
 
-    public static DefaultAttributeContainer.Builder createGenericVillagerAttributes(){
+    //This is where the error comes from
+    public static DefaultAttributeContainer.Builder createAttributes(){
         return PathAwareEntity.createMobAttributes()
                 .add(EntityAttributes.MAX_HEALTH, 20)
                 .add(EntityAttributes.MOVEMENT_SPEED, 0.5)
