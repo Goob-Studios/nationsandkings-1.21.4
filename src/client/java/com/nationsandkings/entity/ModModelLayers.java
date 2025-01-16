@@ -6,5 +6,5 @@ import net.minecraft.util.Identifier;
 
 public class ModModelLayers {
     public static final EntityModelLayer GENERIC_VILLAGER =
-            new EntityModelLayer(new Identifier(NationsAndKings.MOD_ID, "genericvillager"), "main");
+            new EntityModelLayer(Identifier.of(NationsAndKings.MOD_ID, "genericvillager"), "main");
 }

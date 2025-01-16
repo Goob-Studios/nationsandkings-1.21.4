@@ -8,22 +8,29 @@ import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.StopFollowingCustomerGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PatrolEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -62,12 +69,12 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-        hasJob = false;
+        this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
+    }
 
-        asleep = false;
-
-
-
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
     @Override
@@ -129,11 +136,12 @@ public class GenericVillagerEntity extends PathAwareEntity {
         this.goalSelector.add(1, sleepGoal);
     }
 
-    public static DefaultAttributeContainer.Builder createGenericVillagerAttributes(){
+    //This is where the error comes from
+    public static DefaultAttributeContainer.Builder createAttributes(){
         return PathAwareEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1);
+                .add(EntityAttributes.MAX_HEALTH, 20)
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.5)
+                .add(EntityAttributes.ATTACK_DAMAGE, 1);
     }
 
     public boolean getHasJob(){
@@ -162,6 +170,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
         homeLocation = pos;
     }
 
+
+    //This needs to be re-rewritten this would be incredibly taxing on spawn
     private void findHome(){
         if(getHomeLocation() == null){
             BlockPos villagerPos = new BlockPos((int) this.getX(), (int) this.getY(), (int) this.getZ());
@@ -184,15 +194,6 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-
-        //Should wake the villager up when hit
-        if(asleep){
-            sleepGoal.stop();
-        }
-        return super.damage(source, amount);
-    }
 
     public boolean getIsAsleep() {
         return asleep;
