@@ -24,8 +24,8 @@ public class NationsAndKings implements ModInitializer {
 
 		LOGGER.info("Hello Fabric world!");
 
-//		LOGGER.info("Registering Mod Entities");
-//		Entities.RegisterModEntities();
+		LOGGER.info("Registering Mod Entities");
+		Entities.RegisterModEntities();
 
 		LOGGER.info("Registering Mod Blocks");
 		ModBlocks.initialize();
