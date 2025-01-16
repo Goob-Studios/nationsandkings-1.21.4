@@ -1,3 +1,6 @@
 {
-  "item.nationsandkings.town_hall": "Town Hall"
+  "item.nationsandkings.town_hall": "Town Hall",
+  "nak_workstations.nationsandkings": "Villager Workstations",
+  "nak_decorations.nationsandkings": "Village Decorations",
+  "nak_coins": "Villager Currency"
 }
