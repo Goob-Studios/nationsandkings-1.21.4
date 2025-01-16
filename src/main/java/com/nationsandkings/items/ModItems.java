@@ -62,15 +62,17 @@ public class ModItems {
         Registry.register(Registries.ITEM_GROUP, DECORATIVE_ITEMS_BLOCKS_KEY, DECORATIVE_ITEMS_BLOCKS);
         Registry.register(Registries.ITEM_GROUP, COINS_GROUP_KEY, COINS_GROUP);
 
+        //Adding Items to the decorative group
+        ItemGroupEvents.modifyEntriesEvent(DECORATIVE_ITEMS_BLOCKS_KEY).register(itemGroup -> {
+            itemGroup.add(Items.VINE);
+        });
+
         //Adding Items to the COINS_GROUP
         ItemGroupEvents.modifyEntriesEvent(COINS_GROUP_KEY).register(itemGroup -> {
             itemGroup.add(ModItems.COPPER_COINS);
         });
 
-        //Adding Items to the decorative group
-        ItemGroupEvents.modifyEntriesEvent(DECORATIVE_ITEMS_BLOCKS_KEY).register(itemGroup -> {
-            itemGroup.add(Items.VINE);
-        });
+
 
 
 
