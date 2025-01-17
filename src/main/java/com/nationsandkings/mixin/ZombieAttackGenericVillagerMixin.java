@@ -14,7 +14,7 @@ public class ZombieAttackGenericVillagerMixin {
     @Inject(at = @At("HEAD"), method = "initCustomGoals")
     private void init(CallbackInfo info) {
         ZombieEntity zombie = (ZombieEntity) (Object) this;
-        GoalSelector goalSelector = ((AccessZombieAccessor) zombie).getGoalSelector();
+        GoalSelector goalSelector = ((goalSelectorAccessor) zombie).getGoalSelector();
         goalSelector.add(3, new ActiveTargetGoal(zombie, GenericVillagerEntity.class, true));
     }
 }

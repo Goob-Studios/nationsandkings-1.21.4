@@ -18,7 +18,7 @@ public class SkeletonAttackGenericVillagerMixin {
     @Inject(at = @At("HEAD"), method = "initGoals")
     private void init(CallbackInfo info) {
         SkeletonEntity skeleton = (SkeletonEntity) (Object) this;
-        GoalSelector goalSelector = ((AccessZombieAccessor) skeleton).getGoalSelector();
+        GoalSelector goalSelector = ((goalSelectorAccessor) skeleton).getGoalSelector();
         goalSelector.add(3, new ActiveTargetGoal(skeleton, GenericVillagerEntity.class, true));
     }
 }
