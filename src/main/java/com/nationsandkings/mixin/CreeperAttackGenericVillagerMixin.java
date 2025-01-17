@@ -16,6 +16,6 @@ public class CreeperAttackGenericVillagerMixin {
     private void init(CallbackInfo info) {
         CreeperEntity creeper = (CreeperEntity) (Object) this;
         GoalSelector goalSelector = ((goalSelectorAccessor) creeper).getGoalSelector();
-        goalSelector.add(3, new ActiveTargetGoal(creeper, GenericVillagerEntity.class, true));
+        goalSelector.add(1, new ActiveTargetGoal(creeper, GenericVillagerEntity.class, true));
     }
 }
