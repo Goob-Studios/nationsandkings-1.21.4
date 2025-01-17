@@ -5,6 +5,7 @@
   "mixins": [
     "AccessZombieAccessor",
     "ExampleMixin",
+    "SkeletonAttackGenericVillagerMixin",
     "ZombieAttackGenericVillagerMixin"
   ],
   "injectors": {
