@@ -12,8 +12,10 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.Schedule;
+import net.minecraft.entity.ai.brain.task.VillagerTaskListProvider;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.StopFollowingCustomerGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -104,6 +106,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public void initBrain(Brain<GenericVillagerEntity> brain){
         brain.setSchedule(Schedule.VILLAGER_DEFAULT);
+
+
     }
 
     @Override
@@ -143,21 +147,21 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
-    @Override
-    public void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(0, new SwimGoal(this));
-        //targeting and the melee attack needs to be above this goal, so it can actively target the thing that
-        //attacked it before it tries to sleep again.
-//        sleepGoal = new VillagerGenericSleep(this);
-//        this.goalSelector.add(1, sleepGoal);
-        this.goalSelector.add(1, new VillagerSchedulingGoal(this));
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
-        this.goalSelector.add(3, new VillagerWorkGoal(this));
-        this.goalSelector.add(4, new LookAroundGoal(this));
-
-
-    }
+//    @Override
+//    public void initGoals() {
+//        super.initGoals();
+//        this.goalSelector.add(0, new SwimGoal(this));
+//        //targeting and the melee attack needs to be above this goal, so it can actively target the thing that
+//        //attacked it before it tries to sleep again.
+////        sleepGoal = new VillagerGenericSleep(this);
+////        this.goalSelector.add(1, sleepGoal);
+////        this.goalSelector.add(1, new VillagerSchedulingGoal(this));
+////        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
+////        this.goalSelector.add(3, new VillagerWorkGoal(this));
+////        this.goalSelector.add(4, new LookAroundGoal(this));
+//
+//
+//    }
 
     public void keepSleep(){
         this.goalSelector.add(0, new SwimGoal(this));
