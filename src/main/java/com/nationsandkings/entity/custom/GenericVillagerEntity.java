@@ -1,5 +1,6 @@
 package com.nationsandkings.entity.custom;
 
+import com.mojang.serialization.Dynamic;
 import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.ai.VillagerGenericSleep;
 import com.nationsandkings.entity.ai.VillagerSchedulingGoal;
@@ -11,6 +12,8 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.StopFollowingCustomerGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -24,6 +27,7 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -46,6 +50,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     private BlockPos homeLocation;
 
     private String[] VillagerJobs = new String[5];
+
 
 
 
@@ -76,6 +81,29 @@ public class GenericVillagerEntity extends PathAwareEntity {
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         return super.initialize(world, difficulty, spawnReason, entityData);
+    }
+
+
+    public Brain<GenericVillagerEntity> getBrain(){
+        return (Brain<GenericVillagerEntity>) super.getBrain();
+    }
+
+
+    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
+        Brain<GenericVillagerEntity> brain = (Brain<GenericVillagerEntity>) this.createBrainProfile().deserialize(dynamic);
+        this.initBrain(brain);
+        return brain;
+    }
+
+    public void reinitializeBrain(ServerWorld world) {
+        Brain<GenericVillagerEntity> brain = this.getBrain();
+        brain.stopAllTasks(world, this);
+        this.brain = brain.copy();
+        this.initBrain(this.getBrain());
+    }
+
+    public void initBrain(Brain<GenericVillagerEntity> brain){
+        brain.setSchedule(Schedule.VILLAGER_DEFAULT);
     }
 
     @Override
