@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -75,9 +76,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     private VillagerGenericSleep sleepGoal;
 
 
-    public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
-        super(entityType, world);
+    public GenericVillagerEntity(EntityType<? extends LivingEntity> entityType, World world) {
+        super((EntityType<? extends PathAwareEntity>) entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
+
     }
 
     @Override
@@ -86,25 +88,25 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
 
-    public Brain<GenericVillagerEntity> getBrain(){
-        return (Brain<GenericVillagerEntity>) super.getBrain();
+    public Brain<GenericVillagerBrain> getBrain(){
+        return (Brain<GenericVillagerBrain>) super.getBrain();
     }
 
 
     protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
-        Brain<GenericVillagerEntity> brain = (Brain<GenericVillagerEntity>) this.createBrainProfile().deserialize(dynamic);
+        Brain<GenericVillagerBrain> brain = (Brain<GenericVillagerBrain>) this.createBrainProfile().deserialize(dynamic);
         this.initBrain(brain);
         return brain;
     }
 
     public void reinitializeBrain(ServerWorld world) {
-        Brain<GenericVillagerEntity> brain = this.getBrain();
-        brain.stopAllTasks(world, this);
+        Brain<GenericVillagerBrain> brain = this.getBrain();
+//        brain.stopAllTasks(world, this);
         this.brain = brain.copy();
         this.initBrain(this.getBrain());
     }
 
-    public void initBrain(Brain<GenericVillagerEntity> brain){
+    public void initBrain(Brain<GenericVillagerBrain> brain){
         brain.setSchedule(Schedule.VILLAGER_DEFAULT);
 
 
