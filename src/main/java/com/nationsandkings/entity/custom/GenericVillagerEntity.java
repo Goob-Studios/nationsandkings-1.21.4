@@ -1,36 +1,26 @@
 package com.nationsandkings.entity.custom;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Dynamic;
 import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.ai.VillagerGenericSleep;
-import com.nationsandkings.entity.ai.VillagerSchedulingGoal;
-import com.nationsandkings.entity.ai.VillagerWorkGoal;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.Schedule;
-import net.minecraft.entity.ai.brain.task.VillagerTaskListProvider;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.StopFollowingCustomerGoal;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.*;
-import net.minecraft.entity.passive.AxolotlBrain;
-import net.minecraft.entity.passive.AxolotlEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -55,6 +45,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     private BlockPos homeLocation;
 
     private String[] VillagerJobs = new String[5];
+
+    private Brain brain;
 
 
 
@@ -81,7 +73,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public GenericVillagerEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super((EntityType<? extends PathAwareEntity>) entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
-
+        NbtOps nbtOps = NbtOps.INSTANCE;
+        this.brain = this.deserializeBrain(new Dynamic(nbtOps, (NbtElement)nbtOps.createMap(ImmutableMap.of(nbtOps.createString("memories"), (NbtElement)nbtOps.emptyMap()))));
     }
 
     @Override
@@ -90,8 +83,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
 
-    public Brain<GenericVillagerBrain> getBrain(){
-        return (Brain<GenericVillagerBrain>) super.getBrain();
+    public Brain<GenericVillagerEntity> getBrain(){
+        NationsAndKings.LOGGER.info("Got Brain");
+        return this.brain;
     }
 
 
@@ -106,13 +100,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
     public void reinitializeBrain(ServerWorld world) {
-        Brain<GenericVillagerBrain> brain = this.getBrain();
+        Brain<GenericVillagerEntity> brain = this.getBrain();
 //        brain.stopAllTasks(world, this);
         this.brain = brain.copy();
         this.initBrain(this.getBrain());
     }
 
-    public void initBrain(Brain<GenericVillagerBrain> brain){
+    public void initBrain(Brain<GenericVillagerEntity> brain){
         brain.setSchedule(Schedule.VILLAGER_DEFAULT);
 
 
