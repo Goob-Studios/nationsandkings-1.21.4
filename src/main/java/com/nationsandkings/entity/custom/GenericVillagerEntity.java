@@ -26,6 +26,8 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.*;
+import net.minecraft.entity.passive.AxolotlBrain;
+import net.minecraft.entity.passive.AxolotlEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -93,10 +95,14 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
 
+//    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
+//        Brain<GenericVillagerBrain> brain = (Brain<GenericVillagerBrain>) this.createBrainProfile().deserialize(dynamic);
+//        this.initBrain(brain);
+//        return brain;
+//    }
+
     protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
-        Brain<GenericVillagerBrain> brain = (Brain<GenericVillagerBrain>) this.createBrainProfile().deserialize(dynamic);
-        this.initBrain(brain);
-        return brain;
+        return GenericVillagerBrain.create((Brain<GenericVillagerEntity>) this.createBrainProfile().deserialize(dynamic));
     }
 
     public void reinitializeBrain(ServerWorld world) {
