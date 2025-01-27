@@ -18,6 +18,7 @@ import net.minecraft.entity.passive.AxolotlEntity;
 import net.minecraft.entity.passive.SnifferEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.math.intprovider.IntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 
@@ -36,7 +37,7 @@ public class GenericVillagerBrain  {
 //        NationsAndKings.LOGGER.info("Created the brain");
 //        return brain;
         addCoreActivities(brain);
-//        addIdleActivities(brain);
+        addIdleActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.CORE);
         brain.resetPossibleActivities();
@@ -45,15 +46,17 @@ public class GenericVillagerBrain  {
     }
 
     private static void addCoreActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(StrollTask.create(0.5f, 5, 5)));
+        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(new UpdateLookControlTask(45, 90), new MoveToTargetTask()));
+        //StrollTask.create(0.5f, 5, 5)
     }
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
-//        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60))), Pair.of(4, new CompositeTask(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT), ImmutableSet.of(), CompositeTask.Order.ORDERED, CompositeTask.RunMode.TRY_ALL, ImmutableList.of(Pair.of(StrollTask.createDynamicRadius(0.5F), 2), Pair.of(StrollTask.create(0.15F, false), 2))))));
+        brain.setTaskList(Activity.IDLE, 1, ImmutableList.of(StrollTask.create(0.3f)));
     }
 
     static void updateActivities(GenericVillagerEntity villager) {
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.SNIFF, Activity.IDLE));
+        NationsAndKings.LOGGER.info("Attempting to update the activities.");
+        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.IDLE));
     }
 
 

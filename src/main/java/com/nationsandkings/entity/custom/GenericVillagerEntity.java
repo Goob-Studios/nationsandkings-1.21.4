@@ -138,45 +138,55 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
 
 
+//    @Override
+//    public void tick() {
+//        super.tick();
+//
+//
+//
+//
+//        //particle stuff
+//        // 20 is temporary to test if the logic works
+//        if(VillagerArray[1] == 0 && timeout == 0){
+//            //There is a better way to do this
+//                this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
+//                        this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
+//            this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
+//                    this.getX()-0.5,getY() , getZ() - 0.5, 0.5, 0.5, 0.5);
+//            this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
+//                    this.getX(),getY()+0.5, getZ(), 0.5, 0.5, 0.5);
+//            timeout = 300;
+//        }
+//        else{
+//            timeout--;
+//        }
+//
+//        if(homeLocation == null){
+//            findHome();
+//        }
+//
+//        if(VillagerArray[0] == 0 || this.getWorld().getTimeOfDay() == 0){
+//            VillagerArray[0] = (int) ((Math.random() * (13100 - 12900)) + 12900);
+//
+//        }
+//
+//        if(VillagerArray[1] == 0.0){
+//            VillagerArray[1] = 20;
+//        }
+//
+//
+//    }
+
     @Override
-    public void tick() {
-        super.tick();
-
-
-
-
-        //particle stuff
-        // 20 is temporary to test if the logic works
-        if(VillagerArray[1] == 0 && timeout == 0){
-            //There is a better way to do this
-                this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
-                        this.getX()+0.5,getY() , getZ() + 0.5, 0.5, 0.5, 0.5);
-            this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
-                    this.getX()-0.5,getY() , getZ() - 0.5, 0.5, 0.5, 0.5);
-            this.getWorld().addParticle(ParticleTypes.ANGRY_VILLAGER,
-                    this.getX(),getY()+0.5, getZ(), 0.5, 0.5, 0.5);
-            timeout = 300;
-        }
-        else{
-            timeout--;
-        }
-
-        if(homeLocation == null){
-            findHome();
-        }
-
-        if(VillagerArray[0] == 0 || this.getWorld().getTimeOfDay() == 0){
-            VillagerArray[0] = (int) ((Math.random() * (13100 - 12900)) + 12900);
-
-        }
-
-        if(VillagerArray[1] == 0.0){
-            VillagerArray[1] = 20;
-        }
-
-
+    protected void mobTick(ServerWorld world) {
+        Profiler profiler = Profilers.get();
+        profiler.push("genericVillagerBrain");
+        this.getBrain().tick(world, this);
+        profiler.pop();
+        profiler.push("genericVillagerBrainActivityUpdate");
+        GenericVillagerBrain.updateActivities(this);
+        profiler.pop();
     }
-
 
 
 //    @Override
