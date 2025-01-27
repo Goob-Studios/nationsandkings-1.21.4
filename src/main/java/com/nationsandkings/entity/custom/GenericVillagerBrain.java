@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.*;
 import net.minecraft.entity.passive.AxolotlEntity;
+import net.minecraft.entity.passive.SnifferEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
@@ -44,11 +45,15 @@ public class GenericVillagerBrain  {
     }
 
     private static void addCoreActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(new UpdateLookControlTask(45, 90), StrollTask.create(0.5f)));
+        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(StrollTask.create(0.5f, 5, 5)));
     }
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60))), Pair.of(4, new CompositeTask(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT), ImmutableSet.of(), CompositeTask.Order.ORDERED, CompositeTask.RunMode.TRY_ALL, ImmutableList.of(Pair.of(StrollTask.createDynamicRadius(0.5F), 2), Pair.of(StrollTask.create(0.15F, false), 2))))));
+    }
+
+    static void updateActivities(GenericVillagerEntity villager) {
+        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.SNIFF, Activity.IDLE));
     }
 
 

@@ -105,18 +105,18 @@ public class GenericVillagerEntity extends PathAwareEntity {
         return GenericVillagerBrain.create((Brain<GenericVillagerEntity>) this.createBrainProfile().deserialize(dynamic));
     }
 
-    public void reinitializeBrain(ServerWorld world) {
-        Brain<GenericVillagerEntity> brain = this.getBrain();
+//    public void reinitializeBrain(ServerWorld world) {
+//        Brain<GenericVillagerEntity> brain = this.getBrain();
 //        brain.stopAllTasks(world, this);
-        this.brain = brain.copy();
-        this.initBrain(this.getBrain());
-    }
+//        this.brain = brain.copy();
+//        this.initBrain(this.getBrain());
+//    }
 
-    public void initBrain(Brain<GenericVillagerEntity> brain){
-        brain.setSchedule(Schedule.VILLAGER_DEFAULT);
-
-
-    }
+//    public void initBrain(Brain<GenericVillagerEntity> brain){
+//        brain.setSchedule(Schedule.VILLAGER_DEFAULT);
+//
+//
+//    }
 
     @Override
     public void tick() {
