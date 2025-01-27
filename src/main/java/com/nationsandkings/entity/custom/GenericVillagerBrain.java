@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 public class GenericVillagerBrain  {
 
 
-    protected GenericVillagerBrain(EntityType<? extends LivingEntity> entityType, World world) {
+    protected GenericVillagerBrain() {
     }
 
     protected static Brain<?> create(Brain<GenericVillagerEntity> brain) {
@@ -35,7 +35,7 @@ public class GenericVillagerBrain  {
 //        NationsAndKings.LOGGER.info("Created the brain");
 //        return brain;
         addCoreActivities(brain);
-        addIdleActivities(brain);
+//        addIdleActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.CORE);
         brain.resetPossibleActivities();
@@ -44,11 +44,11 @@ public class GenericVillagerBrain  {
     }
 
     private static void addCoreActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(new UpdateLookControlTask(45, 90), new MoveToTargetTask(), new StayAboveWaterTask<>(0.8f), new FleeTask<>(1.0f)));
+        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(new UpdateLookControlTask(45, 90), StrollTask.create(0.5f)));
     }
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60))), Pair.of(4, new CompositeTask(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT), ImmutableSet.of(), CompositeTask.Order.ORDERED, CompositeTask.RunMode.TRY_ALL, ImmutableList.of(Pair.of(StrollTask.createDynamicRadius(0.5F), 2), Pair.of(StrollTask.create(0.15F, false), 2))))));
+//        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60))), Pair.of(4, new CompositeTask(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT), ImmutableSet.of(), CompositeTask.Order.ORDERED, CompositeTask.RunMode.TRY_ALL, ImmutableList.of(Pair.of(StrollTask.createDynamicRadius(0.5F), 2), Pair.of(StrollTask.create(0.15F, false), 2))))));
     }
 
 

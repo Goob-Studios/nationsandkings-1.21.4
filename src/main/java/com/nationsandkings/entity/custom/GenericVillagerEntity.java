@@ -91,7 +91,6 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
 
     public Brain<GenericVillagerEntity> getBrain(){
-        NationsAndKings.LOGGER.info("Got Brain");
         return this.brain;
     }
 
