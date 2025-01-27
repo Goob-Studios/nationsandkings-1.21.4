@@ -1,5 +1,6 @@
 package com.nationsandkings.entity.custom;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Dynamic;
 import com.nationsandkings.NationsAndKings;
@@ -12,7 +13,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.Schedule;
+import net.minecraft.entity.ai.brain.sensor.Sensor;
+import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
@@ -20,6 +24,7 @@ import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.AxolotlBrain;
+import net.minecraft.entity.passive.AxolotlEntity;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -46,6 +51,12 @@ import java.util.Set;
 public class GenericVillagerEntity extends PathAwareEntity {
     
     public static final Set<Block> INTERACT_BLOCKS = null;
+
+    //Memory/Brain stuff
+
+    protected static final ImmutableList<? extends MemoryModuleType<?>> MEMORY_MODULES;
+
+    protected static final ImmutableList<? extends SensorType<? extends Sensor<? super GenericVillagerEntity>>> SENSORS;
 
     private boolean hasJob;
     private int timeout = 300;
@@ -86,6 +97,11 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
+    static {
+        SENSORS = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES);
+        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET);
+    }
+
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         return super.initialize(world, difficulty, spawnReason, entityData);
@@ -103,6 +119,20 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public int getMaxHeadRotation() {
         return 1;
+    }
+    
+    //Information on the brain
+
+    protected Brain.Profile<GenericVillagerEntity> createBrainProfile() {
+        return Brain.createProfile(MEMORY_MODULES, SENSORS);
+    }
+
+    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
+        return GenericVillagerBrain.create(this.createBrainProfile().deserialize(dynamic));
+    }
+
+    public Brain<GenericVillagerEntity> getBrain() {
+        return (Brain<GenericVillagerEntity>) super.getBrain();
     }
 
 
