@@ -79,11 +79,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
 
 
-    private VillagerGenericSleep sleepGoal;
 
-
-    public GenericVillagerEntity(EntityType<? extends LivingEntity> entityType, World world) {
-        super((EntityType<? extends PathAwareEntity>) entityType, world);
+    public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+        super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
 
     }
@@ -178,7 +176,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
         return PathAwareEntity.createMobAttributes()
                 .add(EntityAttributes.MAX_HEALTH, 20)
                 .add(EntityAttributes.MOVEMENT_SPEED, 0.5)
-                .add(EntityAttributes.ATTACK_DAMAGE, 1);
+                .add(EntityAttributes.ATTACK_DAMAGE, 1)
+                .add(EntityAttributes.ATTACK_KNOCKBACK, 1);
     }
 
     public boolean getHasJob(){
