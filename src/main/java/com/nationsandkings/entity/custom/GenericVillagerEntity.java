@@ -15,6 +15,9 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
+import net.minecraft.entity.ai.pathing.EntityNavigation;
+import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.AxolotlBrain;
 import net.minecraft.nbt.NbtOps;
@@ -82,8 +85,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public GenericVillagerEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super((EntityType<? extends PathAwareEntity>) entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
-//        NbtOps nbtOps = NbtOps.INSTANCE;
-//        this.brain = this.deserializeBrain(new Dynamic(nbtOps, (NbtElement)nbtOps.createMap(ImmutableMap.of(nbtOps.createString("memories"), (NbtElement)nbtOps.emptyMap()))));
+
     }
 
     @Override
@@ -91,34 +93,22 @@ public class GenericVillagerEntity extends PathAwareEntity {
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
+    //Create the navigation, like the Axolotl
 
-//    public Brain<GenericVillagerEntity> getBrain(){
-//        return this.brain;
-//    }
+    protected EntityNavigation createNavigation(World world) {
+        return new MobNavigation(this, world);
+    }
+
+    public int getMaxLookPitchChange() {
+        return 1;
+    }
+
+    public int getMaxHeadRotation() {
+        return 1;
+    }
 
 
-//    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
-//        Brain<GenericVillagerBrain> brain = (Brain<GenericVillagerBrain>) this.createBrainProfile().deserialize(dynamic);
-//        this.initBrain(brain);
-//        return brain;
-//    }
 
-//    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
-//        return GenericVillagerBrain.create((Brain<GenericVillagerEntity>) this.createBrainProfile().deserialize(dynamic));
-//    }
-
-//    public void reinitializeBrain(ServerWorld world) {
-//        Brain<GenericVillagerEntity> brain = this.getBrain();
-//        brain.stopAllTasks(world, this);
-//        this.brain = brain.copy();
-//        this.initBrain(this.getBrain());
-//    }
-
-//    public void initBrain(Brain<GenericVillagerEntity> brain){
-//        brain.setSchedule(Schedule.VILLAGER_DEFAULT);
-//
-//
-//    }
 
     @Override
     public void tick() {
@@ -159,38 +149,29 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
+
+
 //    @Override
-//    protected void mobTick(ServerWorld world) {
-//        super.mobTick(world);
-//        Profiler profiler = Profilers.get();
-//        profiler.push("GenericVillagerBrain");
-//        this.getBrain().tick(world, this);
-//        profiler.pop();
-//        profiler.push("genericvillagerentityActivityUpdate");
-//        profiler.pop();
+//    public void initGoals() {
+//        super.initGoals();
+//        this.goalSelector.add(0, new SwimGoal(this));
+//        //targeting and the melee attack needs to be above this goal, so it can actively target the thing that
+//        //attacked it before it tries to sleep again.
+////        sleepGoal = new VillagerGenericSleep(this);
+////        this.goalSelector.add(1, sleepGoal);
+////        this.goalSelector.add(1, new VillagerSchedulingGoal(this));
+//        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
+////        this.goalSelector.add(3, new VillagerWorkGoal(this));
+//        this.goalSelector.add(4, new LookAroundGoal(this));
+//
+//
 //    }
 
-    @Override
-    public void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(0, new SwimGoal(this));
-        //targeting and the melee attack needs to be above this goal, so it can actively target the thing that
-        //attacked it before it tries to sleep again.
+//    public void keepSleep(){
+//        this.goalSelector.add(0, new SwimGoal(this));
 //        sleepGoal = new VillagerGenericSleep(this);
 //        this.goalSelector.add(1, sleepGoal);
-//        this.goalSelector.add(1, new VillagerSchedulingGoal(this));
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.5));
-//        this.goalSelector.add(3, new VillagerWorkGoal(this));
-        this.goalSelector.add(4, new LookAroundGoal(this));
-
-
-    }
-
-    public void keepSleep(){
-        this.goalSelector.add(0, new SwimGoal(this));
-        sleepGoal = new VillagerGenericSleep(this);
-        this.goalSelector.add(1, sleepGoal);
-    }
+//    }
 
     //This is where the error comes from
     public static DefaultAttributeContainer.Builder createAttributes(){
