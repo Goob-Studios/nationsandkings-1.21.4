@@ -5,6 +5,7 @@ import com.nationsandkings.blocks.ModBlocks;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.items.ModItems;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.SharedConstants;
 import net.minecraft.entity.player.PlayerEntity;
 
 import net.minecraft.network.message.SentMessage;
@@ -25,6 +26,7 @@ public class NationsAndKings implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
+
 
 		LOGGER.info("Hello Fabric world!");
 

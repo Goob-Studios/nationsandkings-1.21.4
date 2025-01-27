@@ -14,6 +14,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.passive.AxolotlBrain;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -28,6 +29,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiler.Profilers;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -121,6 +124,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
         super.tick();
 
 
+
+
         //particle stuff
         // 20 is temporary to test if the logic works
         if(VillagerArray[1] == 0 && timeout == 0){
@@ -153,7 +158,18 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     }
 
-//    @Override
+    @Override
+    protected void mobTick(ServerWorld world) {
+        super.mobTick(world);
+        Profiler profiler = Profilers.get();
+        profiler.push("GenericVillagerBrain");
+        this.getBrain().tick(world, this);
+        profiler.pop();
+        profiler.push("genericvillagerentityActivityUpdate");
+        profiler.pop();
+    }
+
+    //    @Override
 //    public void initGoals() {
 //        super.initGoals();
 //        this.goalSelector.add(0, new SwimGoal(this));
