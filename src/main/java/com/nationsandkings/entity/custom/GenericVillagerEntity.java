@@ -23,6 +23,7 @@ import net.minecraft.entity.mob.*;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -268,5 +269,10 @@ public class GenericVillagerEntity extends PathAwareEntity {
     @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_VILLAGER_DEATH;
+    }
+
+    protected void sendAiDebugData() {
+        super.sendAiDebugData();
+        DebugInfoSender.sendBrainDebugData(this);
     }
 }

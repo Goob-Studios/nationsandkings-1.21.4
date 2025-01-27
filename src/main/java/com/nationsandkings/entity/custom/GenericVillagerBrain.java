@@ -27,12 +27,19 @@ public class GenericVillagerBrain  {
     }
 
     protected static Brain<?> create(Brain<GenericVillagerEntity> brain) {
+//        addCoreActivities(brain);
+//        addIdleActivities(brain);
+//        brain.setDefaultActivity(Activity.CORE);
+//        brain.resetPossibleActivities();
+////        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
+//        NationsAndKings.LOGGER.info("Created the brain");
+//        return brain;
         addCoreActivities(brain);
         addIdleActivities(brain);
-        brain.setDefaultActivity(Activity.IDLE);
-        brain.resetPossibleActivities();
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
-        NationsAndKings.LOGGER.info("Created the brain");
+        brain.setDefaultActivity(Activity.CORE);
+        brain.resetPossibleActivities();
+        NationsAndKings.LOGGER.info("Creating the brain for a villager");
         return brain;
     }
 
