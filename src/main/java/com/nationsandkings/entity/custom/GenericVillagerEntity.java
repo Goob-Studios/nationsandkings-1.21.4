@@ -108,7 +108,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //Create the navigation, like the Axolotl
 
     protected EntityNavigation createNavigation(World world) {
-        return new MobNavigation(this, world);
+
+        MobNavigation mobNavigation = new MobNavigation(this, world);
+
+        mobNavigation.setCanPathThroughDoors(true);
+        mobNavigation.canSwim();
+
+        return mobNavigation;
     }
 
     public int getMaxLookPitchChange() {
@@ -132,6 +138,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public Brain<GenericVillagerEntity> getBrain() {
         return (Brain<GenericVillagerEntity>) super.getBrain();
     }
+
+
 
 
 
