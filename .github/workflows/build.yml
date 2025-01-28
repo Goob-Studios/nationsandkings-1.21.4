@@ -8,6 +8,7 @@ on: [pull_request, push]
 
 env:
   build-number: ${GITHUB_RUN_NUMBER}
+  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
   build:
