@@ -6,6 +6,9 @@
 name: build
 on: [pull_request, push]
 
+env:
+  build-number: ${GITHUB_RUN_NUMBER}
+
 jobs:
   build:
     strategy:
@@ -36,5 +39,13 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.java == '21' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v3
         with:
-          name: Artifacts
-          path: build/libs/
+          name: Package
+          path: staging
+          retention-days: 1
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB-TOKEN }}"
+          automatic_release_tag: "${{ github.run_number }}"
+          title: "Automated Build ${{ github.run_number }}"
+          prerelease: true
+          files: staging/*.jar
