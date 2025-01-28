@@ -39,7 +39,7 @@ public class GenericVillagerBrain  {
         addCoreActivities(brain);
         addIdleActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
-        brain.setDefaultActivity(Activity.CORE);
+        brain.setDefaultActivity(Activity.IDLE);
         brain.resetPossibleActivities();
         NationsAndKings.LOGGER.info("Creating the brain for a villager");
         return brain;
@@ -58,6 +58,7 @@ public class GenericVillagerBrain  {
         NationsAndKings.LOGGER.info("Attempting to update the activities.");
         villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.IDLE));
     }
+
 
 
 }
