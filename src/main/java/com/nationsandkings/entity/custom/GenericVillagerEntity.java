@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Dynamic;
 import com.nationsandkings.NationsAndKings;
-import com.nationsandkings.entity.ai.VillagerGenericSleep;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,14 +13,13 @@ import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
+import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.AxolotlBrain;
-import net.minecraft.entity.passive.AxolotlEntity;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -92,6 +90,11 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
+
+        this.moveControl = new MoveControl(this);
+
+        // This is where the No key memories in MapLike[{}]
+        //Probably from the ImmutableMap.of that's empty.
         this.brain = createBrainProfile().deserialize(new Dynamic<>(NbtOps.INSTANCE, NbtOps.INSTANCE.createMap(ImmutableMap.of())));
 
     }
@@ -128,6 +131,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     
     //Information on the brain
 
+
+    //This is doing Brain.createProfile(), and using Brain.class, not GenericVillagerBrain
     @Override
     protected Brain.Profile<GenericVillagerEntity> createBrainProfile() {
         return Brain.createProfile(MEMORY_MODULES, SENSORS);

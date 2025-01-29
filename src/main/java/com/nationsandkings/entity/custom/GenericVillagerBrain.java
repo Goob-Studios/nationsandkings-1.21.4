@@ -12,7 +12,7 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 public class GenericVillagerBrain  {
 
 
-    protected GenericVillagerBrain() {
+    protected GenericVillagerBrain(){
     }
 
     protected static Brain<?> create(Brain<GenericVillagerEntity> brain) {
