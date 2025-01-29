@@ -14,6 +14,7 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.passive.AxolotlEntity;
 import net.minecraft.entity.passive.SnifferEntity;
 import net.minecraft.item.ItemStack;
@@ -46,7 +47,15 @@ public class GenericVillagerBrain  {
     }
 
     private static void addCoreActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(new UpdateLookControlTask(45, 90), new MoveToTargetTask()));
+        brain.setTaskList(Activity.CORE, 0, ImmutableList.of(
+                new UpdateLookControlTask(45, 90),
+                new MoveToTargetTask(),
+                new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
+                StrollTask.create(0.5f, 15, 15)
+
+        ));
+
+        // new UpdateLookControlTask(45, 90), new MoveToTargetTask())
         //StrollTask.create(0.5f, 5, 5)
     }
 
@@ -55,7 +64,7 @@ public class GenericVillagerBrain  {
     }
 
     static void updateActivities(GenericVillagerEntity villager) {
-        NationsAndKings.LOGGER.info("Attempting to update the activities.");
+//        NationsAndKings.LOGGER.info("Attempting to update the activities.");
         villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.IDLE));
     }
 
