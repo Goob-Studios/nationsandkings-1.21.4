@@ -92,6 +92,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
+        this.brain = createBrainProfile().deserialize(new Dynamic<>(NbtOps.INSTANCE, NbtOps.INSTANCE.createMap(ImmutableMap.of())));
 
     }
 
@@ -127,6 +128,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     
     //Information on the brain
 
+    @Override
     protected Brain.Profile<GenericVillagerEntity> createBrainProfile() {
         return Brain.createProfile(MEMORY_MODULES, SENSORS);
     }
@@ -135,6 +137,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
         return GenericVillagerBrain.create(this.createBrainProfile().deserialize(dynamic));
     }
 
+    @Override
     public Brain<GenericVillagerEntity> getBrain() {
         return (Brain<GenericVillagerEntity>) super.getBrain();
     }
