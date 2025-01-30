@@ -45,6 +45,7 @@ jobs:
 
       # Create GitHub Release when version tags is pushed
       - name: Create Release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') && runner.os == 'Linux' && matrix.java == '21' }}
         uses: softprops/action-gh-release@v1
         with:
           files: staging/*.jar
