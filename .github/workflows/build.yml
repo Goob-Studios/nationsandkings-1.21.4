@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@em
-      - fname: Validate Gradle
+      - name: Validate Gradle
         uses: gradle/wrapper-validation-action@v1
       - name: Setup JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
