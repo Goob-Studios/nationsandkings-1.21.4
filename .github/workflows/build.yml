@@ -9,8 +9,10 @@ on:
 
 env:
   build-number: ${GITHUB_RUN_NUMBER}
+
 permissions:
   contents: write
+
 jobs:
   build:
     strategy:
