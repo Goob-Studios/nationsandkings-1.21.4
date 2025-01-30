@@ -39,8 +39,8 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
         uses: actions/upload-artifact@v3
         with:
-          name: Ting
-          path: staging
+          name: Artifacts
+          path: build/libs/*.jar
           retention-days: 1
 
       # Create GitHub Release when a version tag is pushed
