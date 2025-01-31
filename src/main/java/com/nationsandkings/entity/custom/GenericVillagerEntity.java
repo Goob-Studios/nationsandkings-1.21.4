@@ -135,10 +135,12 @@ public class GenericVillagerEntity extends PathAwareEntity {
     //This is doing Brain.createProfile(), and using Brain.class, not GenericVillagerBrain
     @Override
     protected Brain.Profile<GenericVillagerEntity> createBrainProfile() {
+        NationsAndKings.LOGGER.info("Creating Brain Profile");
         return Brain.createProfile(MEMORY_MODULES, SENSORS);
     }
 
     protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
+        NationsAndKings.LOGGER.info("Deserializing Brain");
         return GenericVillagerBrain.create(this.createBrainProfile().deserialize(dynamic));
     }
 

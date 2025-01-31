@@ -3,10 +3,13 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.nationsandkings.NationsAndKings;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+
+import java.util.Optional;
 
 
 public class GenericVillagerBrain  {
@@ -52,6 +55,11 @@ public class GenericVillagerBrain  {
     static void updateActivities(GenericVillagerEntity villager) {
 //        NationsAndKings.LOGGER.info("Attempting to update the activities.");
         villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.IDLE));
+    }
+
+    public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
+        Optional<PlayerEntity> optional = entity.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
+        return optional.map(player -> new EntityLookTarget(player, true));
     }
 
 
