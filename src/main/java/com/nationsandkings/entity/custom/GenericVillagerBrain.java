@@ -3,14 +3,11 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import com.nationsandkings.NationsAndKings;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.Optional;
