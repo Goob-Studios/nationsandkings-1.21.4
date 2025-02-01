@@ -54,7 +54,7 @@ public class GenericVillagerBrain  {
     }
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.IDLE, 1, ImmutableList.of(StrollTask.create(0.3f)));
+        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
         NationsAndKings.LOGGER.info("Adding Idle Activities");
     }
 
