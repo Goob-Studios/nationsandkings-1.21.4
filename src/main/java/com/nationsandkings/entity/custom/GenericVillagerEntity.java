@@ -20,6 +20,7 @@ import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -95,7 +96,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
         // This is where the No key memories in MapLike[{}]
         //Probably from the ImmutableMap.of that's empty.
-        this.brain = createBrainProfile().deserialize(new Dynamic<>(NbtOps.INSTANCE, NbtOps.INSTANCE.createMap(ImmutableMap.of())));
+
+        //Do we need this? The entity correct creates the brain when it spawns, regardless of this line being there or not.
+//        this.brain = createBrainProfile().deserialize(new Dynamic<>(NbtOps.INSTANCE, NbtOps.INSTANCE.createMap(ImmutableMap.of())));
 
     }
 
@@ -106,6 +109,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        getBrain().setSchedule(new Schedule());
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
@@ -148,6 +152,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     public Brain<GenericVillagerEntity> getBrain() {
         return (Brain<GenericVillagerEntity>) super.getBrain();
     }
+
+// Data Tracker
 
 
 
@@ -193,6 +199,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
 //
 //    }
 
+    //ticking
+
+    @Override
+    public void tick(){
+        super.tick();
+    }
+
     @Override
     protected void mobTick(ServerWorld world) {
         Profiler profiler = Profilers.get();
@@ -202,6 +215,17 @@ public class GenericVillagerEntity extends PathAwareEntity {
         profiler.push("genericVillagerBrainActivityUpdate");
         GenericVillagerBrain.updateActivities(this);
         profiler.pop();
+        super.mobTick(world);
+    }
+
+    //NBT Functions
+
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+    }
+
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
     }
 
 
@@ -241,9 +265,7 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
 
-    private void attack(){
 
-    }
 
     public void increaseHappiness(int amount){
         VillagerArray[1] = VillagerArray[1] + amount;
@@ -285,6 +307,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
         }
 
     }
+
+    //On hits and being hit
+
+    private void attack(){
+
+    }
+
 
 
     public boolean getIsAsleep() {

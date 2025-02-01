@@ -6,7 +6,9 @@ import com.nationsandkings.NationsAndKings;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class GenericVillagerBrain  {
     }
 
     protected static Brain<?> create(Brain<GenericVillagerEntity> brain) {
+
 //        addCoreActivities(brain);
 //        addIdleActivities(brain);
 //        brain.setDefaultActivity(Activity.CORE);
@@ -43,6 +46,8 @@ public class GenericVillagerBrain  {
                 StrollTask.create(0.5f, 15, 15)
 
         ));
+        NationsAndKings.LOGGER.info("Adding Core Activities");
+
 
         // new UpdateLookControlTask(45, 90), new MoveToTargetTask())
         //StrollTask.create(0.5f, 5, 5)
@@ -50,11 +55,16 @@ public class GenericVillagerBrain  {
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
         brain.setTaskList(Activity.IDLE, 1, ImmutableList.of(StrollTask.create(0.3f)));
+        NationsAndKings.LOGGER.info("Adding Idle Activities");
     }
 
-    static void updateActivities(GenericVillagerEntity villager) {
+
+
+
+
+        static void updateActivities(GenericVillagerEntity villager) {
 //        NationsAndKings.LOGGER.info("Attempting to update the activities.");
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.CORE, Activity.IDLE));
+        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE));
     }
 
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
