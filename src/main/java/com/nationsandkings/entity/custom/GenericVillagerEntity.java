@@ -20,6 +20,10 @@ import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.MerchantEntity;
+import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -30,10 +34,12 @@ import net.minecraft.entity.mob.*;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
@@ -45,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class GenericVillagerEntity extends PathAwareEntity {
+public class GenericVillagerEntity extends AnimalEntity {
     
     public static final Set<Block> INTERACT_BLOCKS = null;
 
@@ -66,7 +72,6 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     private String[] VillagerJobs = new String[5];
 
-    private Brain brain;
 
 
 
@@ -88,12 +93,17 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
 
 
-    public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public GenericVillagerEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
 
         this.moveControl = new MoveControl(this);
+        this.getNavigation().setCanSwim(true);
 
+
+
+        this.brain = this.getBrain();
+        NationsAndKings.LOGGER.info(brain.toString());
         // This is where the No key memories in MapLike[{}]
         //Probably from the ImmutableMap.of that's empty.
 
@@ -109,8 +119,13 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        getBrain().setSchedule(new Schedule());
         return super.initialize(world, difficulty, spawnReason, entityData);
+    }
+
+    @Nullable
+    @Override
+    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+        return null;
     }
 
     //Create the navigation, like the Axolotl
@@ -207,6 +222,11 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
     @Override
+    public Arm getMainArm() {
+        return null;
+    }
+
+    @Override
     protected void mobTick(ServerWorld world) {
         Profiler profiler = Profilers.get();
         profiler.push("genericVillagerBrain");
@@ -226,6 +246,11 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return stack.isIn(ItemTags.SNIFFER_FOOD);
     }
 
 
@@ -352,6 +377,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_VILLAGER_DEATH;
     }
+
+
+
 
     protected void sendAiDebugData() {
         super.sendAiDebugData();
