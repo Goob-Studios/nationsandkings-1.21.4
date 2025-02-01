@@ -36,7 +36,6 @@ public class GenericVillagerBrain  {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.resetPossibleActivities();
-        NationsAndKings.LOGGER.info("Creating the brain for a villager");
         return brain;
     }
 
@@ -47,7 +46,6 @@ public class GenericVillagerBrain  {
                 new MoveToTargetTask(),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F)
         ));
-        NationsAndKings.LOGGER.info("Adding Core Activities");
 
 
         // new UpdateLookControlTask(45, 90), new MoveToTargetTask())
@@ -57,7 +55,6 @@ public class GenericVillagerBrain  {
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
         brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
-        NationsAndKings.LOGGER.info("Adding Idle Activities");
     }
 
 
