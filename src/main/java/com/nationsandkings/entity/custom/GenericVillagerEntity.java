@@ -10,20 +10,15 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.*;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -39,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class GenericVillagerEntity extends AnimalEntity {
+public class GenericVillagerEntity extends PathAwareEntity {
     
     public static final Set<Block> INTERACT_BLOCKS = null;
 
@@ -81,11 +76,12 @@ public class GenericVillagerEntity extends AnimalEntity {
 
 
 
-    public GenericVillagerEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+    public GenericVillagerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
 
-        this.moveControl = new MoveControl(this);
+
+
         this.getNavigation().setCanSwim(true);
 
 
@@ -109,11 +105,11 @@ public class GenericVillagerEntity extends AnimalEntity {
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
-    @Nullable
-    @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return null;
-    }
+//    @Nullable
+//    @Override
+//    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+//        return null;
+//    }
 
     //Create the navigation, like the Axolotl
 
@@ -233,10 +229,10 @@ public class GenericVillagerEntity extends AnimalEntity {
         super.readCustomDataFromNbt(nbt);
     }
 
-    @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return stack.isIn(ItemTags.SNIFFER_FOOD);
-    }
+//    @Override
+//    public boolean isBreedingItem(ItemStack stack) {
+//        return stack.isIn(ItemTags.SNIFFER_FOOD);
+//    }
 
 
 //    @Override
