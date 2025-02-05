@@ -7,11 +7,13 @@ import com.nationsandkings.entity.ai.tasks.VillagerDefendTask;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
+import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.task.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 
 public class GenericVillagerBrain  {
@@ -52,8 +54,16 @@ public class GenericVillagerBrain  {
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
-        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
+                 brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
     }
+
+    private static void addFightActivities(Brain<GenericVillagerEntity> brain){
+        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(
+//                MeleeAttackTask.create(MemoryModuleType.HURT_BY_ENTITY, 0)
+        ));
+    }
+
+    //For attacking, we can most likely use the hurt_by_entity memory
 
 
 

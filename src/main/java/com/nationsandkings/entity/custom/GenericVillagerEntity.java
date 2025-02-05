@@ -2,6 +2,7 @@ package com.nationsandkings.entity.custom;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
+import com.nationsandkings.NationsAndKings;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -96,8 +97,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
     }
 
     static {
-        SENSORS = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES);
-        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.PATH, MemoryModuleType.NEAREST_HOSTILE);
+        SENSORS = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY);
+        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.PATH, MemoryModuleType.NEAREST_HOSTILE, MemoryModuleType.HURT_BY);
     }
 
     @Override
@@ -216,6 +217,9 @@ public class GenericVillagerEntity extends PathAwareEntity {
         profiler.push("genericVillagerBrainActivityUpdate");
         GenericVillagerBrain.updateActivities(this);
         profiler.pop();
+
+
+
         super.mobTick(world);
     }
 
