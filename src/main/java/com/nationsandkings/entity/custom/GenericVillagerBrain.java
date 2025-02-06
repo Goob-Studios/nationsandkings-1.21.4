@@ -9,6 +9,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.mob.WardenBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
@@ -59,9 +61,10 @@ public class GenericVillagerBrain  {
     }
 
     private static void addFightActivities(Brain<GenericVillagerEntity> brain){
-        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(
-//                MeleeAttackTask.create(MemoryModuleType.HURT_BY_ENTITY, 0)
-        ));
+//        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(
+//                MeleeAttackTask.create(, 0)
+//        ));
+        brain.setTaskList(Activity.FIGHT, 1, ImmutableList.of(MeleeAttackTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
     }
 
 
@@ -73,7 +76,7 @@ public class GenericVillagerBrain  {
 
         static void updateActivities(GenericVillagerEntity villager) {
 //        NationsAndKings.LOGGER.info("Attempting to update the activities.");
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE));
+        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT));
     }
 
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
