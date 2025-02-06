@@ -33,6 +33,7 @@ public class GenericVillagerBrain  {
 //        return brain;
         addCoreActivities(brain);
         addIdleActivities(brain);
+        addFightActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.resetPossibleActivities();
@@ -62,6 +63,7 @@ public class GenericVillagerBrain  {
 //                MeleeAttackTask.create(MemoryModuleType.HURT_BY_ENTITY, 0)
         ));
     }
+
 
     //For attacking, we can most likely use the hurt_by_entity memory
 
