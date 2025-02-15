@@ -35,6 +35,7 @@ public class GenericVillagerBrain  {
 //        return brain;
         addCoreActivities(brain);
         addIdleActivities(brain);
+        addRestActivities(brain);
         addFightActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
@@ -67,6 +68,13 @@ public class GenericVillagerBrain  {
         brain.setTaskList(Activity.FIGHT, 1, ImmutableList.of(MeleeAttackTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
     }
 
+    private static void addRestActivities(Brain<GenericVillagerEntity> brain){
+
+        //For the sleep task to work properly we'd need the memory module for home (and to store that.)
+        // MemoryModuleType.HOME, MemoryModuleState.VALUE_PRESENT, MemoryModuleType.LAST_WOKEN, MemoryModuleState.REGISTERED
+        brain.setTaskList(Activity.REST, 0, ImmutableList.of(new SleepTask()));
+    }
+
 
     //For attacking, we can most likely use the hurt_by_entity memory
 
@@ -76,7 +84,9 @@ public class GenericVillagerBrain  {
 
         static void updateActivities(GenericVillagerEntity villager) {
 //        NationsAndKings.LOGGER.info("Attempting to update the activities.");
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT));
+            //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
+            // We also need to work on the sleeping activity.
+        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST));
     }
 
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
