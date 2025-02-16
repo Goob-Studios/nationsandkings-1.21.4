@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.nationsandkings.entity.ai.tasks.VillagerDefendTask;
+import com.nationsandkings.entity.ai.tasks.VillagerFloatTask;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
@@ -45,7 +46,7 @@ public class GenericVillagerBrain  {
 
     private static void addCoreActivities(Brain<GenericVillagerEntity> brain) {
         brain.setTaskList(Activity.CORE, 0, ImmutableList.of(
-                new StayAboveWaterTask<>(0.8F),
+                new VillagerFloatTask<>(1.0F),
                 new UpdateLookControlTask(45, 90),
                 new MoveToTargetTask(),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F)
