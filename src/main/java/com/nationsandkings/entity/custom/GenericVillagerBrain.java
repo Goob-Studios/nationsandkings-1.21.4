@@ -59,7 +59,11 @@ public class GenericVillagerBrain  {
 
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
-                 brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
+//        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
+        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(
+                StrollTask.create(0.8f),
+                LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60))
+        ));
     }
 
     private static void addFightActivities(Brain<GenericVillagerEntity> brain){
