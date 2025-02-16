@@ -46,7 +46,7 @@ public class GenericVillagerBrain  {
 
     private static void addCoreActivities(Brain<GenericVillagerEntity> brain) {
         brain.setTaskList(Activity.CORE, 0, ImmutableList.of(
-                new VillagerFloatTask<>(1.0F),
+                new VillagerFloatTask<>(0.8F),
                 new UpdateLookControlTask(45, 90),
                 new MoveToTargetTask(),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F)
