@@ -61,7 +61,7 @@ public class GenericVillagerBrain  {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
         brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(
-                StrollTask.create(0.5f, 10, 10),
+                StrollTask.create(0.5f, 7, 7),
                 LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60))
         ));
     }
