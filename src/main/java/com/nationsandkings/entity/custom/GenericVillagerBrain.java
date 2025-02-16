@@ -62,10 +62,7 @@ public class GenericVillagerBrain  {
     }
 
     private static void addFightActivities(Brain<GenericVillagerEntity> brain){
-//        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(
-//                MeleeAttackTask.create(, 0)
-//        ));
-        brain.setTaskList(Activity.FIGHT, 1, ImmutableList.of(MeleeAttackTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
+        brain.setTaskList(Activity.FIGHT, 1, ImmutableList.of(VillagerDefendTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
     }
 
     private static void addRestActivities(Brain<GenericVillagerEntity> brain){

@@ -22,13 +22,13 @@ public class VillagerDefendTask{
     }
 
 
-    public static <T extends MobEntity> SingleTickTask<T> create(int cooldown) {
+    public static <T extends PathAwareEntity> SingleTickTask<T> create(int cooldown) {
         return create((target) -> {
             return true;
         }, cooldown);
     }
 
-    public static <T extends MobEntity> SingleTickTask<T> create(Predicate<T> targetPredicate, int cooldown) {
+    public static <T extends PathAwareEntity> SingleTickTask<T> create(Predicate<T> targetPredicate, int cooldown) {
         return TaskTriggerer.task((context) -> {
             return context.group(context.queryMemoryOptional(MemoryModuleType.LOOK_TARGET), context.queryMemoryValue(MemoryModuleType.ATTACK_TARGET), context.queryMemoryAbsent(MemoryModuleType.ATTACK_COOLING_DOWN), context.queryMemoryValue(MemoryModuleType.VISIBLE_MOBS)).apply(context, (lookTarget, attackTarget, attackCoolingDown, visibleMobs) -> {
                 return (world, entity, time) -> {
