@@ -68,7 +68,7 @@ public class GenericVillagerBrain  {
                 LookAtMobWithIntervalTask.follow(EntityType.COW, 2.0f, UniformIntProvider.create(30, 60)),
                 LookAtMobWithIntervalTask.follow(EntityType.PIG, 2.0f, UniformIntProvider.create(30, 60)),
                 LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 2.0f, UniformIntProvider.create(30, 60)),
-                new VillagerLookAroundTask(UniformIntProvider.create(5, 30), 1.0f, 1.0f, 1.0f)
+                new VillagerLookAroundTask(UniformIntProvider.create(5, 30), 1.0f, 0.0f, 1.0f)
         ));
     }
 
