@@ -3,10 +3,7 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import com.nationsandkings.entity.ai.tasks.VillagerDefendTask;
-import com.nationsandkings.entity.ai.tasks.VillagerFloatTask;
-import com.nationsandkings.entity.ai.tasks.VillagerMoveToTargetTask;
-import com.nationsandkings.entity.ai.tasks.VillagerUpdateLookControlTask;
+import com.nationsandkings.entity.ai.tasks.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
@@ -62,14 +59,21 @@ public class GenericVillagerBrain  {
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
+
         brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(
                 StrollTask.create(0.5f, 7, 7),
-                LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60))
+                //There's gotta be a better way to do this
+                LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 2.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.COW, 2.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.PIG, 2.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 2.0f, UniformIntProvider.create(30, 60)),
+                new VillagerLookAroundTask(UniformIntProvider.create(5, 30), 1.0f, 1.0f, 1.0f)
         ));
     }
 
     private static void addFightActivities(Brain<GenericVillagerEntity> brain){
-        brain.setTaskList(Activity.FIGHT, 1, ImmutableList.of(VillagerDefendTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
+        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(VillagerDefendTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
     }
 
     private static void addRestActivities(Brain<GenericVillagerEntity> brain){
