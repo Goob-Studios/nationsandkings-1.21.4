@@ -3,11 +3,10 @@ package com.nationsandkings.entity.ai.tasks;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.brain.*;
-import net.minecraft.entity.ai.brain.task.MoveToTargetTask;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class VillagerMoveToTarget extends MultiTickTask<PathAwareEntity> {
+public class VillagerMoveToTargetTask extends MultiTickTask<PathAwareEntity> {
     private static final int MAX_UPDATE_COUNTDOWN = 40;
     private int pathUpdateCountdownTicks;
     @Nullable
@@ -25,23 +24,23 @@ public class VillagerMoveToTarget extends MultiTickTask<PathAwareEntity> {
     private BlockPos lookTargetPos;
     private float speed;
 
-    public VillagerMoveToTarget() {
+    public VillagerMoveToTargetTask() {
         this(150, 250);
     }
 
-    public VillagerMoveToTarget(int minRunTime, int maxRunTime) {
+    public VillagerMoveToTargetTask(int minRunTime, int maxRunTime) {
         super(ImmutableMap.of(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleState.REGISTERED, MemoryModuleType.PATH, MemoryModuleState.VALUE_ABSENT, MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_PRESENT), minRunTime, maxRunTime);
     }
 
-    protected boolean shouldRun(ServerWorld serverWorld, MobEntity mobEntity) {
+    protected boolean shouldRun(ServerWorld serverWorld, PathAwareEntity pathAwareEntity) {
         if (this.pathUpdateCountdownTicks > 0) {
             --this.pathUpdateCountdownTicks;
             return false;
         } else {
-            Brain<?> brain = mobEntity.getBrain();
+            Brain<?> brain = pathAwareEntity.getBrain();
             WalkTarget walkTarget = (WalkTarget)brain.getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get();
-            boolean bl = this.hasReached(mobEntity, walkTarget);
-            if (!bl && this.hasFinishedPath(mobEntity, walkTarget, serverWorld.getTime())) {
+            boolean bl = this.hasReached(pathAwareEntity, walkTarget);
+            if (!bl && this.hasFinishedPath(pathAwareEntity, walkTarget, serverWorld.getTime())) {
                 this.lookTargetPos = walkTarget.getLookTarget().getBlockPos();
                 return true;
             } else {
@@ -55,36 +54,36 @@ public class VillagerMoveToTarget extends MultiTickTask<PathAwareEntity> {
         }
     }
 
-    protected boolean shouldKeepRunning(ServerWorld serverWorld, MobEntity mobEntity, long l) {
+    protected boolean shouldKeepRunning(ServerWorld serverWorld, PathAwareEntity pathAwareEntity, long l) {
         if (this.path != null && this.lookTargetPos != null) {
-            Optional<WalkTarget> optional = mobEntity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET);
-            boolean bl = (Boolean)optional.map(VillagerMoveToTarget::isTargetSpectator).orElse(false);
-            EntityNavigation entityNavigation = mobEntity.getNavigation();
-            return !entityNavigation.isIdle() && optional.isPresent() && !this.hasReached(mobEntity, (WalkTarget)optional.get()) && !bl;
+            Optional<WalkTarget> optional = pathAwareEntity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET);
+            boolean bl = (Boolean)optional.map(VillagerMoveToTargetTask::isTargetSpectator).orElse(false);
+            EntityNavigation entityNavigation = pathAwareEntity.getNavigation();
+            return !entityNavigation.isIdle() && optional.isPresent() && !this.hasReached(pathAwareEntity, (WalkTarget)optional.get()) && !bl;
         } else {
             return false;
         }
     }
 
-    protected void finishRunning(ServerWorld serverWorld, MobEntity mobEntity, long l) {
-        if (mobEntity.getBrain().hasMemoryModule(MemoryModuleType.WALK_TARGET) && !this.hasReached(mobEntity, (WalkTarget)mobEntity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get()) && mobEntity.getNavigation().isNearPathStartPos()) {
+    protected void finishRunning(ServerWorld serverWorld, PathAwareEntity pathAwareEntity, long l) {
+        if (pathAwareEntity.getBrain().hasMemoryModule(MemoryModuleType.WALK_TARGET) && !this.hasReached(pathAwareEntity, (WalkTarget)pathAwareEntity.getBrain().getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get()) && pathAwareEntity.getNavigation().isNearPathStartPos()) {
             this.pathUpdateCountdownTicks = serverWorld.getRandom().nextInt(40);
         }
 
-        mobEntity.getNavigation().stop();
-        mobEntity.getBrain().forget(MemoryModuleType.WALK_TARGET);
-        mobEntity.getBrain().forget(MemoryModuleType.PATH);
+        pathAwareEntity.getNavigation().stop();
+        pathAwareEntity.getBrain().forget(MemoryModuleType.WALK_TARGET);
+        pathAwareEntity.getBrain().forget(MemoryModuleType.PATH);
         this.path = null;
     }
 
-    protected void run(ServerWorld serverWorld, MobEntity mobEntity, long l) {
-        mobEntity.getBrain().remember(MemoryModuleType.PATH, this.path);
-        mobEntity.getNavigation().startMovingAlong(this.path, (double)this.speed);
+    protected void run(ServerWorld serverWorld, PathAwareEntity pathAwareEntity, long l) {
+        pathAwareEntity.getBrain().remember(MemoryModuleType.PATH, this.path);
+        pathAwareEntity.getNavigation().startMovingAlong(this.path, (double)this.speed);
     }
 
-    protected void keepRunning(ServerWorld serverWorld, MobEntity mobEntity, long l) {
-        Path path = mobEntity.getNavigation().getCurrentPath();
-        Brain<?> brain = mobEntity.getBrain();
+    protected void keepRunning(ServerWorld serverWorld, PathAwareEntity pathAwareEntity, long l) {
+        Path path = pathAwareEntity.getNavigation().getCurrentPath();
+        Brain<?> brain = pathAwareEntity.getBrain();
         if (this.path != path) {
             this.path = path;
             brain.remember(MemoryModuleType.PATH, path);
@@ -92,15 +91,15 @@ public class VillagerMoveToTarget extends MultiTickTask<PathAwareEntity> {
 
         if (path != null && this.lookTargetPos != null) {
             WalkTarget walkTarget = (WalkTarget)brain.getOptionalRegisteredMemory(MemoryModuleType.WALK_TARGET).get();
-            if (walkTarget.getLookTarget().getBlockPos().getSquaredDistance(this.lookTargetPos) > 4.0 && this.hasFinishedPath(mobEntity, walkTarget, serverWorld.getTime())) {
+            if (walkTarget.getLookTarget().getBlockPos().getSquaredDistance(this.lookTargetPos) > 4.0 && this.hasFinishedPath(pathAwareEntity, walkTarget, serverWorld.getTime())) {
                 this.lookTargetPos = walkTarget.getLookTarget().getBlockPos();
-                this.run(serverWorld, mobEntity, l);
+                this.run(serverWorld, pathAwareEntity, l);
             }
 
         }
     }
 
-    private boolean hasFinishedPath(MobEntity entity, WalkTarget walkTarget, long time) {
+    private boolean hasFinishedPath(PathAwareEntity entity, WalkTarget walkTarget, long time) {
         BlockPos blockPos = walkTarget.getLookTarget().getBlockPos();
         this.path = entity.getNavigation().findPathTo(blockPos, 0);
         this.speed = walkTarget.getSpeed();
@@ -129,7 +128,7 @@ public class VillagerMoveToTarget extends MultiTickTask<PathAwareEntity> {
         return false;
     }
 
-    private boolean hasReached(MobEntity entity, WalkTarget walkTarget) {
+    private boolean hasReached(PathAwareEntity entity, WalkTarget walkTarget) {
         return walkTarget.getLookTarget().getBlockPos().getManhattanDistance(entity.getBlockPos()) <= walkTarget.getCompletionRange();
     }
 
