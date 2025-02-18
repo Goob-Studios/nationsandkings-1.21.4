@@ -108,7 +108,8 @@ public class GenericVillagerEntity extends PathAwareEntity {
                 MemoryModuleType.VISIBLE_MOBS,
                 MemoryModuleType.ATTACK_COOLING_DOWN,
                 MemoryModuleType.ATTACK_TARGET,
-                MemoryModuleType.LOOK_TARGET);
+                MemoryModuleType.NEAREST_ATTACKABLE,
+                MemoryModuleType.IS_PANICKING);
     }
 
     @Override
