@@ -64,11 +64,11 @@ public class GenericVillagerBrain  {
                 StrollTask.create(0.5f, 7, 7),
                 //There's gotta be a better way to do this
                 LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 2.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.COW, 2.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.PIG, 2.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 2.0f, UniformIntProvider.create(30, 60)),
-                new VillagerLookAroundTask(UniformIntProvider.create(5, 30), 1.0f, 0.0f, 1.0f)
+                LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 4.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.COW, 4.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.PIG, 4.0f, UniformIntProvider.create(30, 60)),
+                LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 4.0f, UniformIntProvider.create(30, 60)),
+                new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f)
         ));
     }
 
