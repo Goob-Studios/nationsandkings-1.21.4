@@ -98,7 +98,17 @@ public class GenericVillagerEntity extends PathAwareEntity {
 
     static {
         SENSORS = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY);
-        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.PATH, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.NEAREST_HOSTILE, MemoryModuleType.HURT_BY);
+        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER,
+                MemoryModuleType.LOOK_TARGET,
+                MemoryModuleType.WALK_TARGET,
+                MemoryModuleType.PATH,
+                MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+                MemoryModuleType.NEAREST_HOSTILE,
+                MemoryModuleType.HURT_BY,
+                MemoryModuleType.VISIBLE_MOBS,
+                MemoryModuleType.ATTACK_COOLING_DOWN,
+                MemoryModuleType.ATTACK_TARGET,
+                MemoryModuleType.LOOK_TARGET);
     }
 
     @Override

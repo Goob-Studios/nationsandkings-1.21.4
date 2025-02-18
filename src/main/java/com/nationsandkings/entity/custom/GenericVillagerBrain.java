@@ -62,7 +62,7 @@ public class GenericVillagerBrain  {
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
 
         brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(
-                StrollTask.create(0.5f, 7, 7),
+                StrollTask.create(0.2f, 7, 7),
                 //There's gotta be a better way to do this
                 LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60)),
                 LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 4.0f, UniformIntProvider.create(30, 60)),
@@ -74,7 +74,8 @@ public class GenericVillagerBrain  {
     }
 
     private static void addFightActivities(Brain<GenericVillagerEntity> brain){
-        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(VillagerDefendTask.create(5)), MemoryModuleType.HURT_BY_ENTITY);
+        brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(
+                VillagerDefendTask.create(5)), MemoryModuleType.ATTACK_TARGET);
     }
 
     private static void addRestActivities(Brain<GenericVillagerEntity> brain){
