@@ -56,6 +56,7 @@ public class GenericVillagerBrain  {
         //StrollTask.create(0.5f, 5, 5)
     }
 
+
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
