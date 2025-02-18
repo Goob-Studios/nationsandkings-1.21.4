@@ -48,7 +48,8 @@ public class GenericVillagerBrain  {
                 new VillagerFloatTask<>(0.8F),
                 new VillagerUpdateLookControlTask(45, 90),
                 new VillagerMoveToTargetTask(150, 250),
-                new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F)
+                new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
+                new FleeTask<>(0.5f)
         ));
 
 
@@ -61,15 +62,14 @@ public class GenericVillagerBrain  {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
 
-        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(
-                StrollTask.create(0.2f, 7, 7),
-                //There's gotta be a better way to do this
-                LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 4.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.COW, 4.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.PIG, 4.0f, UniformIntProvider.create(30, 60)),
-                LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 4.0f, UniformIntProvider.create(30, 60)),
-                new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f)
+        brain.setTaskList(Activity.IDLE, ImmutableList.of(
+//                Pair.of(0, StrollTask.create(0.5f, 7, 7)),
+                Pair.of(1, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60))),
+                Pair.of(2, LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 4.0f, UniformIntProvider.create(30, 60))),
+                Pair.of(3, LookAtMobWithIntervalTask.follow(EntityType.COW, 4.0f, UniformIntProvider.create(30, 60))),
+                Pair.of(4, LookAtMobWithIntervalTask.follow(EntityType.PIG, 4.0f, UniformIntProvider.create(30, 60))),
+                Pair.of(5, LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 4.0f, UniformIntProvider.create(30, 60))),
+                Pair.of(6, new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f))
         ));
     }
 
