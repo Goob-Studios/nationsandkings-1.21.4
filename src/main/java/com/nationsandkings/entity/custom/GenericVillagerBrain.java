@@ -3,6 +3,7 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -69,7 +70,8 @@ public class GenericVillagerBrain  {
                 Pair.of(3, LookAtMobWithIntervalTask.follow(EntityType.COW, 4.0f, UniformIntProvider.create(30, 60))),
                 Pair.of(4, LookAtMobWithIntervalTask.follow(EntityType.PIG, 4.0f, UniformIntProvider.create(30, 60))),
                 Pair.of(5, LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(6, new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f))
+                Pair.of(6, LookAtMobWithIntervalTask.follow(Entities.GENERIC_VILLAGER, 4.0f, UniformIntProvider.create(30, 60))),
+                Pair.of(7, new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f))
         ));
     }
 

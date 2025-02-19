@@ -2,17 +2,15 @@ package com.nationsandkings.items;
 
 import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.blocks.ModBlocks;
+import com.nationsandkings.entity.Entities;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 
@@ -35,6 +33,16 @@ public class ModItems {
             new Item(new Item.Settings().registryKey(COPPER_COIN_KEY)),
             COPPER_COIN_KEY
     );
+
+    //0xffffff
+    //0xffdd00
+
+
+    // Spawn Eggs
+
+//    public static final SpawnEggItem BETTER_VILLAGER_SPAWN_EGG = new SpawnEggItem(Entities.GENERIC_VILLAGER, Integer.parseInt("2A2E2B", 16), Integer.parseInt("AAF644", 16), new Item.Properties());
+//
+//    public static final RegistryKey<Item> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
 
 
 
