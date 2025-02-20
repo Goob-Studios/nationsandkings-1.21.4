@@ -81,7 +81,7 @@ public class ModItems {
         //Adding Items to the COINS_GROUP
         ItemGroupEvents.modifyEntriesEvent(COINS_GROUP_KEY).register(itemGroup -> {
             itemGroup.add(ModItems.COPPER_COINS);
-            itemGroup.add(ModItems.GENERIC_VILLAGER_SPAWN_EGG);
+//            itemGroup.add(ModItems.GENERIC_VILLAGER_SPAWN_EGG);
         });
 
 
