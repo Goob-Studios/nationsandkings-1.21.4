@@ -41,9 +41,11 @@ public class ModItems {
     // Spawn Eggs
 
 
-//    public static final RegistryKey<Item> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
+//    public static final RegistryKey<SpawnEggItem> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of((RegistryKey<? extends Registry<SpawnEggItem>>) RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
 //
-//    public static final SpawnEggItem BETTER_VILLAGER_SPAWN_EGG = new SpawnEggItem(Entities.GENERIC_VILLAGER, Integer.parseInt("2A2E2B", 16), Integer.parseInt("AAF644", 16), new Item.Properties());
+//    public static final SpawnEggItem GENERIC_VILLAGER_SPAWN_EGG = register(
+//            new SpawnEggItem(Entities.GENERIC_VILLAGER, new SpawnEggItem().settings().registryKey(GENERIC_VILLAGER_SPAWN_EGG_KEY)),
+//            GENERIC_VILLAGER_SPAWN_EGG_KEY);
 
 
 
@@ -79,6 +81,7 @@ public class ModItems {
         //Adding Items to the COINS_GROUP
         ItemGroupEvents.modifyEntriesEvent(COINS_GROUP_KEY).register(itemGroup -> {
             itemGroup.add(ModItems.COPPER_COINS);
+            itemGroup.add(ModItems.GENERIC_VILLAGER_SPAWN_EGG);
         });
 
 
