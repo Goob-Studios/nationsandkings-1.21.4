@@ -40,9 +40,10 @@ public class ModItems {
 
     // Spawn Eggs
 
-//    public static final SpawnEggItem BETTER_VILLAGER_SPAWN_EGG = new SpawnEggItem(Entities.GENERIC_VILLAGER, Integer.parseInt("2A2E2B", 16), Integer.parseInt("AAF644", 16), new Item.Properties());
-//
+
 //    public static final RegistryKey<Item> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
+//
+//    public static final SpawnEggItem BETTER_VILLAGER_SPAWN_EGG = new SpawnEggItem(Entities.GENERIC_VILLAGER, Integer.parseInt("2A2E2B", 16), Integer.parseInt("AAF644", 16), new Item.Properties());
 
 
 
