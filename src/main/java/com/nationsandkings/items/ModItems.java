@@ -40,7 +40,7 @@ public class ModItems {
     // Spawn Eggs
 
 
-    public static final RegistryKey<Item> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
+    public static final RegistryKey<Item> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "generic_villager_spawn_egg"));
 
     public static final SpawnEggItem GENERIC_VILLAGER_SPAWN_EGG = (SpawnEggItem) register(
         new SpawnEggItem(Entities.GENERIC_VILLAGER ,new Item.Settings().registryKey(GENERIC_VILLAGER_SPAWN_EGG_KEY)),
