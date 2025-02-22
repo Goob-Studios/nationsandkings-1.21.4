@@ -84,6 +84,10 @@ public class ModItems {
 //            itemGroup.add(ModItems.GENERIC_VILLAGER_SPAWN_EGG);
         });
 
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(itemGroup -> {
+            itemGroup.add(ModItems.GENERIC_VILLAGER_SPAWN_EGG);
+        });
+
 
 
 
