@@ -18,10 +18,9 @@ public class ModItems {
 
     //From the fabric wiki, we can change later
     public static Item register(Item item, RegistryKey<Item> registryKey) {
-        // Register the item.
+
         Item registeredItem = Registry.register(Registries.ITEM, registryKey.getValue(), item);
 
-        // Return the registered item!
         return registeredItem;
 
     }
@@ -41,13 +40,13 @@ public class ModItems {
     // Spawn Eggs
 
 
-//    public static final RegistryKey<SpawnEggItem> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of((RegistryKey<? extends Registry<SpawnEggItem>>) RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
-//
-//    public static final SpawnEggItem GENERIC_VILLAGER_SPAWN_EGG = register(
-//            new SpawnEggItem(Entities.GENERIC_VILLAGER, new SpawnEggItem().settings().registryKey(GENERIC_VILLAGER_SPAWN_EGG_KEY)),
-//            GENERIC_VILLAGER_SPAWN_EGG_KEY);
+    public static final RegistryKey<Item> GENERIC_VILLAGER_SPAWN_EGG_KEY = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(NationsAndKings.MOD_ID, "spawn_egg"));
 
+    public static final SpawnEggItem GENERIC_VILLAGER_SPAWN_EGG = register(
 
+    );
+
+    //Group Keys
 
     public static final RegistryKey<ItemGroup> WORKSTATIONS_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(NationsAndKings.MOD_ID, "nak_workstations"));
     public static final ItemGroup WORKSTATIONS_GROUP = FabricItemGroup.builder()
