@@ -73,7 +73,8 @@ public class ModBlocks {
     );
 
     public static final Block TOWN_HALL = register(
-            new Block(AbstractBlock.Settings.create().registryKey(TOWN_HALL_KEY).sounds(BlockSoundGroup.METAL)),
+            new Block(AbstractBlock.Settings.create().registryKey(TOWN_HALL_KEY).sounds(BlockSoundGroup.METAL)
+                    .hardness(1.5f)),
             TOWN_HALL_KEY,
             true
     );
