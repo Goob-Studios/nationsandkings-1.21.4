@@ -85,7 +85,7 @@ public class GenericVillagerBrain  {
 
     private static void addFightActivities(Brain<GenericVillagerEntity> brain){
         brain.setTaskList(Activity.FIGHT, 0, ImmutableList.of(
-                VillagerDefendTask.create(5)), MemoryModuleType.ATTACK_TARGET);
+                AttackTask.create(5, 1.5f)), MemoryModuleType.NEAREST_HOSTILE);
     }
 
     private static void addRestActivities(Brain<GenericVillagerEntity> brain){
