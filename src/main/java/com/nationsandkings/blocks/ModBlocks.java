@@ -41,16 +41,6 @@ public class ModBlocks {
         // Only used if we want to register the item - I think most of the time we will but who knows
         //This is different than the blocks class but that's because I think they do it in the items class
         if (shouldRegisterItem) {
-            NationsAndKings.LOGGER.info("Should be registering item here");
-//            BlockItem blockItem = new BlockItem(block, new Item.Settings());
-//            Registry.register(Registries.ITEM, id, blockItem);
-//            ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL)
-//                    .register((itemGroup) -> itemGroup.add(blockItem));
-//            final RegistryKey<BlockItem> blockItem = RegistryKey.of()
-//            ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
-//                entries.add(TOWN_HALL.asItem());
-//            });
-//            final RegistryKey<BlockItem> = RegistryKey.of()
             RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, blockKey.getValue());
 
             BlockItem blockItem = new BlockItem(block, new Item.Settings().registryKey(itemKey));
