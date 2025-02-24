@@ -49,8 +49,8 @@ public class GenericVillagerBrain  {
                 new VillagerFloatTask<>(0.8F),
                 new VillagerUpdateLookControlTask(45, 90),
                 new VillagerMoveToTargetTask(150, 250),
-                new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F)
-//                new FleeTask<>(0.5f)
+                new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
+                new FleeTask<>(0.5f)
         ));
 
 
