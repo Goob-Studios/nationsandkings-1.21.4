@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "nationsandkings:copper_coin"
+    "nationsandkings:copper_coin",
+    "minecraft:emerald"
   ]
 }
