@@ -8,6 +8,7 @@ import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.items.ModItems;
 import com.nationsandkings.tags.NKTags;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.*;
@@ -152,6 +153,12 @@ public class GenericVillagerBrain  {
         return optional.map(player -> new EntityLookTarget(player, true));
     }
 
+    //Stop Walking
+    private static void stopWalking(GenericVillagerEntity villager) {
+        villager.getBrain().forget(MemoryModuleType.WALK_TARGET);
+        villager.getNavigation().stop();
+    }
+
     //Random Tasks
 
     private static RandomTask<GenericVillagerEntity> makeRandomWanderTask() {
@@ -164,6 +171,12 @@ public class GenericVillagerBrain  {
 
     private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
         return entity.getBrain().hasMemoryModule(MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM);
+    }
+
+    //Memory Stuff
+
+    private static void setAdmiringItem(LivingEntity entity) {
+        entity.getBrain().remember(MemoryModuleType.ADMIRING_ITEM, true, 119L);
     }
 
 
@@ -207,6 +220,37 @@ public class GenericVillagerBrain  {
             }
         }
 
+    }
+
+    protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
+        stopWalking(villager);
+        ItemStack itemStack;
+        if (itemEntity.getStack().isOf(Items.GOLD_NUGGET)) {
+            villager.sendPickup(itemEntity, itemEntity.getStack().getCount());
+            itemStack = itemEntity.getStack();
+            itemEntity.discard();
+        } else {
+            villager.sendPickup(itemEntity, 1);
+            itemStack = getItemFromStack(itemEntity);
+        }
+
+        if (isVillagerCurrency(itemStack)) {
+            villager.getBrain().forget(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
+//            swapItemWithOffHand(world, piglin, itemStack);
+            setAdmiringItem(villager);
+        }
+    }
+
+    private static ItemStack getItemFromStack(ItemEntity stack) {
+        ItemStack itemStack = stack.getStack();
+        ItemStack itemStack2 = itemStack.split(1);
+        if (itemStack.isEmpty()) {
+            stack.discard();
+        } else {
+            stack.setStack(itemStack);
+        }
+
+        return itemStack2;
     }
 
     private static List<ItemStack> getBarteredItem(GenericVillagerEntity villager) {
