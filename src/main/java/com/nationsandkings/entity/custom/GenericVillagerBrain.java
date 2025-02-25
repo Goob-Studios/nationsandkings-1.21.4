@@ -89,6 +89,7 @@ public class GenericVillagerBrain  {
     private static void addIdleActivities(Brain<GenericVillagerEntity> brain) {
 //        brain.setTaskList(Activity.IDLE, 0, ImmutableList.of(StrollTask.create(0.3f)));
 //        brain.setTaskList(Activity.IDLE, ImmutableList.of(Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60)))));
+//        brain.setTaskList(Activity.IDLE, ImmutableList.of(UpdateAttackTargetTask.create(world, target), ));
 
         brain.setTaskList(Activity.IDLE, ImmutableList.of(
 //                Pair.of(0, StrollTask.create(0.5f, 7, 7)),
@@ -98,7 +99,8 @@ public class GenericVillagerBrain  {
                 Pair.of(4, LookAtMobWithIntervalTask.follow(EntityType.PIG, 4.0f, UniformIntProvider.create(30, 60))),
                 Pair.of(5, LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 4.0f, UniformIntProvider.create(30, 60))),
                 Pair.of(6, LookAtMobWithIntervalTask.follow(Entities.GENERIC_VILLAGER, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(7, new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f))
+                Pair.of(7, new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f)),
+                Pair.of(8, makeRandomWanderTask())
         ));
     }
 
@@ -149,6 +151,21 @@ public class GenericVillagerBrain  {
         Optional<PlayerEntity> optional = entity.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
         return optional.map(player -> new EntityLookTarget(player, true));
     }
+
+    //Random Tasks
+
+    private static RandomTask<GenericVillagerEntity> makeRandomWanderTask() {
+        return new RandomTask(ImmutableList.of(Pair.of(StrollTask.create(0.2F), 2), Pair.of(FindEntityTask.create(Entities.GENERIC_VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, 0.2F, 2), 2), Pair.of(TaskTriggerer.runIf(GenericVillagerBrain::canWander, GoToLookTargetTask.create(0.2F, 3)), 2), Pair.of(new WaitTask(60, 120), 1)));
+    }
+
+    private static boolean canWander(LivingEntity villager) {
+        return !hasPlayerHoldingWantedItemNearby(villager);
+    }
+
+    private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
+        return entity.getBrain().hasMemoryModule(MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM);
+    }
+
 
     //Bartering Stuff
 

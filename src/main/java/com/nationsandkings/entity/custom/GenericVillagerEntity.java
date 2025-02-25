@@ -123,7 +123,8 @@ public class GenericVillagerEntity extends PassiveEntity {
                 MemoryModuleType.ADMIRING_ITEM,
                 MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM,
                 MemoryModuleType.ADMIRING_DISABLED,
-                MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM);
+                MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM,
+                MemoryModuleType.INTERACTION_TARGET);
     }
 
     @Override
