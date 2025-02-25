@@ -70,7 +70,6 @@ public class ModItems {
 
     //Item Tags
 
-    public static final TagKey<Item> VILLAGER_CURRENCY = TagKey.of(RegistryKeys.ITEM, Identifier.of("nationsandkings", "villager_currency"));
 
 
     public static void initialize() {
@@ -92,6 +91,8 @@ public class ModItems {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(itemGroup -> {
             itemGroup.add(ModItems.GENERIC_VILLAGER_SPAWN_EGG);
         });
+
+
 
 
 

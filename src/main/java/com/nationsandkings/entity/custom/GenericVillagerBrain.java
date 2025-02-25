@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
+import com.nationsandkings.tags.NKTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
@@ -119,7 +120,7 @@ public class GenericVillagerBrain  {
     }
 
     protected static boolean isVillagerCurrency(ItemStack stack) {
-        return stack.isIn(ItemTags.);
+        return stack.isIn(NKTags.VILLAGER_CURRENCY);
     }
 
 
