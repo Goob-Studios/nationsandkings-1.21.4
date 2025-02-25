@@ -8,11 +8,10 @@ import com.nationsandkings.entity.ai.tasks.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.task.*;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.WardenBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.Optional;
@@ -95,6 +94,11 @@ public class GenericVillagerBrain  {
         brain.setTaskList(Activity.REST, 0, ImmutableList.of(new SleepTask()));
     }
 
+    //Working on making bartering work
+//    private static void addBarterActivites(Brain<GenericVillagerEntity> brain){
+//        brain.setTaskList();
+//    }
+
 
     //For attacking, we can most likely use the hurt_by_entity memory
 
@@ -112,6 +116,10 @@ public class GenericVillagerBrain  {
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
         Optional<PlayerEntity> optional = entity.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
         return optional.map(player -> new EntityLookTarget(player, true));
+    }
+
+    protected static boolean isVillagerCurrency(ItemStack stack) {
+        return stack.isIn(ItemTags.);
     }
 
 

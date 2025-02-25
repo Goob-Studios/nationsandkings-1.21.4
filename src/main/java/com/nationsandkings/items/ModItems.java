@@ -10,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.text.Text;
 
@@ -66,6 +67,10 @@ public class ModItems {
             .icon(() -> new ItemStack(Items.EMERALD))
             .displayName(Text.translatable("nak_coins"))
             .build();
+
+    //Item Tags
+
+    public static final TagKey<Item> VILLAGER_CURRENCY = TagKey.of(RegistryKeys.ITEM, Identifier.of("nationsandkings", "villager_currency"));
 
 
     public static void initialize() {
