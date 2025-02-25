@@ -5,19 +5,31 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
+import com.nationsandkings.items.ModItems;
 import com.nationsandkings.tags.NKTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+
+
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -27,8 +39,15 @@ import java.util.Optional;
 
 public class GenericVillagerBrain  {
 
+    public static final Item BARTERING_ITEM;
+
+
 
     protected GenericVillagerBrain(){
+    }
+
+    static {
+        BARTERING_ITEM = ModItems.COPPER_COINS;
     }
 
     protected static Brain<?> create(Brain<GenericVillagerEntity> brain) {
@@ -44,6 +63,7 @@ public class GenericVillagerBrain  {
         addIdleActivities(brain);
         addRestActivities(brain);
         addFightActivities(brain);
+        addAdmireItemActivities(brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.resetPossibleActivities();
@@ -56,7 +76,8 @@ public class GenericVillagerBrain  {
                 new VillagerUpdateLookControlTask(45, 90),
                 new VillagerMoveToTargetTask(150, 250),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
-                new FleeTask<>(0.5f)
+                new FleeTask<>(0.5f),
+                AdmireItemTask.create(115)
         ));
 
 
@@ -85,6 +106,10 @@ public class GenericVillagerBrain  {
         brain.setTaskList(Activity.PLAY, ImmutableList.of(
 
         ));
+    }
+
+    private static void addAdmireItemActivities(Brain<GenericVillagerEntity> brain) {
+        brain.setTaskList(Activity.ADMIRE_ITEM, 10, ImmutableList.of(WalkTowardsNearestVisibleWantedItemTask.create(GenericVillagerBrain::doesNotHaveCurrencyInOffHand, 1.0F, true, 9), WantNewItemTask.create(9), AdmireItemTimeLimitTask.create(200, 200)), MemoryModuleType.ADMIRING_ITEM);
     }
 
 
@@ -117,7 +142,7 @@ public class GenericVillagerBrain  {
 //        NationsAndKings.LOGGER.info("Attempting to update the activities.");
             //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
             // We also need to work on the sleeping activity.
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST));
+        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST, Activity.ADMIRE_ITEM));
     }
 
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
@@ -129,6 +154,103 @@ public class GenericVillagerBrain  {
 
     protected static boolean isVillagerCurrency(ItemStack stack) {
         return stack.isIn(NKTags.VILLAGER_CURRENCY);
+    }
+
+    private static void barterItem(GenericVillagerEntity villager, ItemStack stack) {
+        ItemStack itemStack = villager.addItem(stack);
+        dropBarteredItem(villager, Collections.singletonList(itemStack));
+    }
+
+    private static void doBarter(GenericVillagerEntity villager, List<ItemStack> items) {
+        Optional<PlayerEntity> optional = villager.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
+        if (optional.isPresent()) {
+            dropBarteredItem(villager, (PlayerEntity)optional.get(), items);
+        } else {
+            dropBarteredItem(villager, items);
+        }
+
+    }
+
+    private static void dropBarteredItem(GenericVillagerEntity villager, List<ItemStack> items) {
+        drop(villager, items, findGround(villager));
+    }
+
+    private static void dropBarteredItem(GenericVillagerEntity villager, PlayerEntity player, List<ItemStack> items) {
+        drop(villager, items, player.getPos());
+    }
+
+    private static void drop(GenericVillagerEntity villager, List<ItemStack> items, Vec3d pos) {
+        if (!items.isEmpty()) {
+//            villager.swingHand(Hand.OFF_HAND);
+            Iterator var3 = items.iterator();
+
+            while(var3.hasNext()) {
+                ItemStack itemStack = (ItemStack)var3.next();
+                TargetUtil.give(villager, itemStack, pos.add(0.0, 1.0, 0.0));
+            }
+        }
+
+    }
+
+    private static List<ItemStack> getBarteredItem(GenericVillagerEntity villager) {
+        LootTable lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.PIGLIN_BARTERING_GAMEPLAY);
+        List<ItemStack> list = lootTable.generateLoot((new LootWorldContext.Builder((ServerWorld)villager.getWorld())).add(LootContextParameters.THIS_ENTITY, villager).build(LootContextTypes.BARTER));
+        return list;
+    }
+
+    protected static void consumeOffHandItem(ServerWorld world, GenericVillagerEntity villager, boolean barter) {
+        ItemStack itemStack = villager.getStackInHand(Hand.OFF_HAND);
+        villager.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+        boolean bl;
+        if (villager.isAdult()) {
+            bl = acceptsForBarter(itemStack);
+            if (barter && bl) {
+                doBarter(villager, getBarteredItem(villager));
+            } else if (!bl) {
+                boolean bl2 = !villager.tryEquip(world, itemStack).isEmpty();
+                if (!bl2) {
+                    barterItem(villager, itemStack);
+                }
+            }
+        } else {
+            bl = !villager.tryEquip(world, itemStack).isEmpty();
+            if (!bl) {
+                ItemStack itemStack2 = villager.getMainHandStack();
+                if (isVillagerCurrency(itemStack2)) {
+                    barterItem(villager, itemStack2);
+                } else {
+                    doBarter(villager, Collections.singletonList(itemStack2));
+                }
+
+//                villager.equipToMainHand(itemStack);
+            }
+        }
+
+    }
+
+    protected static void pickupItemWithOffHand(ServerWorld world, GenericVillagerEntity villager) {
+        if (isAdmiringItem(villager) && !villager.getOffHandStack().isEmpty()) {
+            villager.dropStack(world, villager.getOffHandStack());
+            villager.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+        }
+
+    }
+
+    private static boolean acceptsForBarter(ItemStack stack) {
+        return stack.isOf(BARTERING_ITEM);
+    }
+
+    private static boolean isAdmiringItem(GenericVillagerEntity entity) {
+        return entity.getBrain().hasMemoryModule(MemoryModuleType.ADMIRING_ITEM);
+    }
+
+    private static Vec3d findGround(GenericVillagerEntity villager) {
+        Vec3d vec3d = FuzzyTargeting.find(villager, 4, 2);
+        return vec3d == null ? villager.getPos() : vec3d;
+    }
+
+    private static boolean doesNotHaveCurrencyInOffHand(GenericVillagerEntity villager) {
+        return villager.getOffHandStack().isEmpty() || !isVillagerCurrency(villager.getOffHandStack());
     }
 
 

@@ -119,7 +119,11 @@ public class GenericVillagerEntity extends PassiveEntity {
                 MemoryModuleType.ATTACK_TARGET,
                 MemoryModuleType.NEAREST_ATTACKABLE,
                 MemoryModuleType.IS_PANICKING,
-                MemoryModuleType.HOME);
+                MemoryModuleType.HOME,
+                MemoryModuleType.ADMIRING_ITEM,
+                MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM,
+                MemoryModuleType.ADMIRING_DISABLED,
+                MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM);
     }
 
     @Override
@@ -410,7 +414,8 @@ public class GenericVillagerEntity extends PassiveEntity {
         DebugInfoSender.sendBrainDebugData(this);
     }
 
-
-
-
+    //A Temporary function till breeding is worked out
+    public boolean isAdult() {
+        return true;
+    }
 }
