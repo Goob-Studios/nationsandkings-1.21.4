@@ -8,15 +8,21 @@ import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.tags.NKTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 
 public class GenericVillagerBrain  {
@@ -119,9 +125,13 @@ public class GenericVillagerBrain  {
         return optional.map(player -> new EntityLookTarget(player, true));
     }
 
+    //Bartering Stuff
+
     protected static boolean isVillagerCurrency(ItemStack stack) {
         return stack.isIn(NKTags.VILLAGER_CURRENCY);
     }
+
+
 
 
 
