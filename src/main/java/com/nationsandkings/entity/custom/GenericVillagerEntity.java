@@ -18,6 +18,7 @@ import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -31,7 +32,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
@@ -337,6 +340,32 @@ public class GenericVillagerEntity extends PassiveEntity {
     public void setHomeLocation(BlockPos pos){
         homeLocation = pos;
     }
+
+    protected void loot(ServerWorld world, ItemEntity itemEntity) {
+        this.triggerItemPickedUpByEntityCriteria(itemEntity);
+        GenericVillagerBrain.loot(world, this, itemEntity);
+    }
+
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ActionResult actionResult = super.interactMob(player, hand);
+        if (actionResult.isAccepted()) {
+            playAmbientSound();
+            return actionResult;
+        } else {
+            playAttackSound();
+            playAttackSound();
+            World var5 = this.getWorld();
+            if (var5 instanceof ServerWorld) {
+                ServerWorld serverWorld = (ServerWorld)var5;
+                return GenericVillagerBrain.playerInteract(serverWorld, this, player, hand);
+            } else {
+                boolean bl = GenericVillagerBrain.isWillingToTrade(this, player.getStackInHand(hand));
+                return (ActionResult)(bl ? ActionResult.SUCCESS : ActionResult.PASS);
+            }
+
+        }
+    }
+
 
 
     //This needs to be re-rewritten this would be incredibly taxing on spawn

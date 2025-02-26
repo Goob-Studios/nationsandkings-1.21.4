@@ -26,6 +26,7 @@ import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
@@ -169,9 +170,7 @@ public class GenericVillagerBrain  {
         return !hasPlayerHoldingWantedItemNearby(villager);
     }
 
-    private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
-        return entity.getBrain().hasMemoryModule(MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM);
-    }
+
 
     //Memory Stuff
 
@@ -225,7 +224,7 @@ public class GenericVillagerBrain  {
     protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
         stopWalking(villager);
         ItemStack itemStack;
-        if (itemEntity.getStack().isOf(Items.GOLD_NUGGET)) {
+        if (itemEntity.getStack().isOf(ModItems.COPPER_COINS)) {
             villager.sendPickup(itemEntity, itemEntity.getStack().getCount());
             itemStack = itemEntity.getStack();
             itemEntity.discard();
@@ -314,8 +313,26 @@ public class GenericVillagerBrain  {
         return villager.getOffHandStack().isEmpty() || !isVillagerCurrency(villager.getOffHandStack());
     }
 
+    public static ActionResult playerInteract(ServerWorld world, GenericVillagerEntity villager, PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        if (isWillingToTrade(villager, itemStack)) {
+            ItemStack itemStack2 = itemStack.splitUnlessCreative(1, player);
+//            swapItemWithOffHand(world, piglin, itemStack2);
+            setAdmiringItem(villager);
+            stopWalking(villager);
+            return ActionResult.SUCCESS;
+        } else {
+            return ActionResult.PASS;
+        }
+    }
 
+    protected static boolean isWillingToTrade(GenericVillagerEntity villager, ItemStack itemStack) {
+        return true;
+    }
 
+    private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
+        return entity.getBrain().hasMemoryModule(MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM);
+    }
 
 
 }
