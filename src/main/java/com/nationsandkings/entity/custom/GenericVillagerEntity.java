@@ -448,4 +448,14 @@ public class GenericVillagerEntity extends PassiveEntity {
     public boolean isAdult() {
         return true;
     }
+
+    protected void equipToOffHand(ItemStack stack) {
+        if (stack.isOf(PiglinBrain.BARTERING_ITEM)) {
+            this.equipStack(EquipmentSlot.OFFHAND, stack);
+            this.updateDropChances(EquipmentSlot.OFFHAND);
+        } else {
+            this.equipLootStack(EquipmentSlot.OFFHAND, stack);
+        }
+
+    }
 }

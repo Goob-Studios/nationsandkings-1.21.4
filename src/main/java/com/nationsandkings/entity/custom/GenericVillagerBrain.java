@@ -8,6 +8,7 @@ import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.items.ModItems;
 import com.nationsandkings.tags.NKTags;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.FuzzyTargeting;
@@ -79,7 +80,8 @@ public class GenericVillagerBrain  {
                 new VillagerMoveToTargetTask(150, 250),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
                 new FleeTask<>(0.5f),
-                AdmireItemTask.create(115)
+                AdmireItemTask.create(119),
+                VillagerRemoveOffHandItemTask.create()
         ));
 
 
@@ -95,14 +97,9 @@ public class GenericVillagerBrain  {
 
         brain.setTaskList(Activity.IDLE, ImmutableList.of(
 //                Pair.of(0, StrollTask.create(0.5f, 7, 7)),
-                Pair.of(1, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(2, LookAtMobWithIntervalTask.follow(EntityType.SHEEP, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(3, LookAtMobWithIntervalTask.follow(EntityType.COW, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(4, LookAtMobWithIntervalTask.follow(EntityType.PIG, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(5, LookAtMobWithIntervalTask.follow(EntityType.CHICKEN, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(6, LookAtMobWithIntervalTask.follow(Entities.GENERIC_VILLAGER, 4.0f, UniformIntProvider.create(30, 60))),
-                Pair.of(7, new VillagerLookAroundTask(UniformIntProvider.create(10, 120), 1.0f, 0.0f, 1.0f)),
-                Pair.of(8, makeRandomWanderTask())
+                Pair.of(0, makeRandomWanderTask()),
+                Pair.of(1, makeRandomLookTask()),
+                (Pair.of(2, FindInteractionTargetTask.create(EntityType.PLAYER, 4)))
         ));
     }
 
@@ -163,7 +160,12 @@ public class GenericVillagerBrain  {
     //Random Tasks
 
     private static RandomTask<GenericVillagerEntity> makeRandomWanderTask() {
-        return new RandomTask(ImmutableList.of(Pair.of(StrollTask.create(0.2F), 2), Pair.of(FindEntityTask.create(Entities.GENERIC_VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, 0.2F, 2), 2), Pair.of(TaskTriggerer.runIf(GenericVillagerBrain::canWander, GoToLookTargetTask.create(0.2F, 3)), 2), Pair.of(new WaitTask(60, 120), 1)));
+        return new RandomTask(ImmutableList.of(Pair.of(StrollTask.create(0.5F), 2), Pair.of(FindEntityTask.create(Entities.GENERIC_VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, 0.5F, 2), 2), Pair.of(TaskTriggerer.runIf(GenericVillagerBrain::canWander, GoToLookTargetTask.create(0.5F, 3)), 2), Pair.of(new WaitTask(60, 120), 1)));
+    }
+
+    private static RandomTask<GenericVillagerEntity> makeRandomLookTask() {
+        return new RandomTask(ImmutableList.of(Pair.of(LookAtMobTask.create(EntityType.PLAYER, 8.0F), 1), Pair.of(LookAtMobTask.create(Entities.GENERIC_VILLAGER, 8.0F), 1), Pair.of(LookAtMobTask.create(8.0F), 1)));
+
     }
 
     private static boolean canWander(LivingEntity villager) {
@@ -235,7 +237,7 @@ public class GenericVillagerBrain  {
 
         if (isVillagerCurrency(itemStack)) {
             villager.getBrain().forget(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
-//            swapItemWithOffHand(world, piglin, itemStack);
+            swapItemWithOffHand(world, villager, itemStack);
             setAdmiringItem(villager);
         }
     }
@@ -258,7 +260,7 @@ public class GenericVillagerBrain  {
         return list;
     }
 
-    protected static void consumeOffHandItem(ServerWorld world, GenericVillagerEntity villager, boolean barter) {
+    public static void consumeOffHandItem(ServerWorld world, GenericVillagerEntity villager, boolean barter) {
         ItemStack itemStack = villager.getStackInHand(Hand.OFF_HAND);
         villager.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
         boolean bl;
@@ -333,6 +335,22 @@ public class GenericVillagerBrain  {
     private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
         return entity.getBrain().hasMemoryModule(MemoryModuleType.NEAREST_PLAYER_HOLDING_WANTED_ITEM);
     }
+
+    //Holding things
+
+    private static void swapItemWithOffHand(ServerWorld world, GenericVillagerEntity villager, ItemStack stack) {
+        if (hasItemInOffHand(villager)) {
+            villager.dropStack(world, villager.getStackInHand(Hand.OFF_HAND));
+        }
+
+        villager.equipToOffHand(stack);
+    }
+
+    private static boolean hasItemInOffHand(GenericVillagerEntity villager) {
+        return !villager.getOffHandStack().isEmpty();
+    }
+
+
 
 
 }
