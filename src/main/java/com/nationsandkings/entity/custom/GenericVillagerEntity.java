@@ -21,6 +21,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -201,6 +202,19 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
         return this.inventory.addStack(stack);
     }
 
+    protected void dropEquipment(ServerWorld world, DamageSource source, boolean causedByPlayer) {
+        super.dropEquipment(world, source, causedByPlayer);
+        Entity entity = source.getAttacker();
+
+        this.inventory.clearToList().forEach((stack) -> {
+            this.dropStack(world, stack);
+        });
+    }
+
+    protected boolean canInsertIntoInventory(ItemStack stack) {
+        return this.inventory.canInsert(stack);
+    }
+
     // Data Tracker
 
 
@@ -354,6 +368,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
         ActionResult actionResult = super.interactMob(player, hand);
         if (actionResult.isAccepted()) {
             playAmbientSound();
+            getInventory();
             return actionResult;
         } else {
             playAttackSound();

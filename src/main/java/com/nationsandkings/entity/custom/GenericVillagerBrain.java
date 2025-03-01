@@ -226,7 +226,7 @@ public class GenericVillagerBrain  {
     protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
         stopWalking(villager);
         ItemStack itemStack;
-        if (itemEntity.getStack().isOf(ModItems.COPPER_COINS)) {
+        if (itemEntity.getStack().isOf(Items.COPPER_INGOT)) {
             villager.sendPickup(itemEntity, itemEntity.getStack().getCount());
             itemStack = itemEntity.getStack();
             itemEntity.discard();
@@ -239,6 +239,11 @@ public class GenericVillagerBrain  {
             villager.getBrain().forget(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
             swapItemWithOffHand(world, villager, itemStack);
             setAdmiringItem(villager);
+        } else {
+            boolean bl = !villager.tryEquip(world, itemStack).equals(ItemStack.EMPTY);
+            if (!bl) {
+                barterItem(villager, itemStack);
+            }
         }
     }
 
