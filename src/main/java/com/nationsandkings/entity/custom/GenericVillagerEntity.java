@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.serialization.Dynamic;
 import com.nationsandkings.NationsAndKings;
+import net.fabricmc.fabric.api.item.v1.EquipmentSlotProvider;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
@@ -39,6 +40,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.profiler.Profilers;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -46,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class GenericVillagerEntity extends PassiveEntity {
+public class GenericVillagerEntity extends PassiveEntity implements InventoryOwner {
     
     public static final Set<Block> INTERACT_BLOCKS = null;
 
@@ -73,6 +75,7 @@ public class GenericVillagerEntity extends PassiveEntity {
 
 
     private final SimpleInventory inventory = new SimpleInventory(30);
+
 
     //max is 20, lowest is 0
     //rimworld style mood breaks?
@@ -127,6 +130,7 @@ public class GenericVillagerEntity extends PassiveEntity {
                 MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM,
                 MemoryModuleType.ADMIRING_DISABLED,
                 MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM,
+                MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM,
                 MemoryModuleType.INTERACTION_TARGET);
     }
 
@@ -450,12 +454,22 @@ public class GenericVillagerEntity extends PassiveEntity {
     }
 
     protected void equipToOffHand(ItemStack stack) {
-        if (stack.isOf(PiglinBrain.BARTERING_ITEM)) {
+        if (stack.isOf(GenericVillagerBrain.BARTERING_ITEM)) {
             this.equipStack(EquipmentSlot.OFFHAND, stack);
             this.updateDropChances(EquipmentSlot.OFFHAND);
         } else {
             this.equipLootStack(EquipmentSlot.OFFHAND, stack);
         }
 
+    }
+
+    public boolean canGather(ServerWorld world, ItemStack stack) {
+        return world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.canPickUpLoot() && GenericVillagerBrain.canGather(this, stack);
+    }
+
+
+    @Override
+    public SimpleInventory getInventory() {
+        return this.inventory;
     }
 }

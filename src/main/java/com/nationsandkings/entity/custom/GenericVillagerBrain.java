@@ -255,7 +255,7 @@ public class GenericVillagerBrain  {
     }
 
     private static List<ItemStack> getBarteredItem(GenericVillagerEntity villager) {
-        LootTable lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.PIGLIN_BARTERING_GAMEPLAY);
+        LootTable lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.VILLAGE_PLAINS_CHEST);
         List<ItemStack> list = lootTable.generateLoot((new LootWorldContext.Builder((ServerWorld)villager.getWorld())).add(LootContextParameters.THIS_ENTITY, villager).build(LootContextTypes.BARTER));
         return list;
     }
@@ -348,6 +348,10 @@ public class GenericVillagerBrain  {
 
     private static boolean hasItemInOffHand(GenericVillagerEntity villager) {
         return !villager.getOffHandStack().isEmpty();
+    }
+
+    protected static boolean canGather(GenericVillagerEntity villager, ItemStack stack) {
+        return !villager.isBaby();
     }
 
 
