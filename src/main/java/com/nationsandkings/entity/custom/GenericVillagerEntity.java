@@ -1,21 +1,25 @@
 package com.nationsandkings.entity.custom;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.serialization.Dynamic;
+import com.nationsandkings.NationsAndKings;
+import net.fabricmc.fabric.api.item.v1.EquipmentSlotProvider;
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -23,15 +27,20 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.*;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.network.encryption.ClientPlayerSession;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.profiler.Profilers;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -39,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class GenericVillagerEntity extends AnimalEntity {
+public class GenericVillagerEntity extends PassiveEntity implements InventoryOwner {
     
     public static final Set<Block> INTERACT_BLOCKS = null;
 
@@ -67,6 +76,7 @@ public class GenericVillagerEntity extends AnimalEntity {
 
     private final SimpleInventory inventory = new SimpleInventory(30);
 
+
     //max is 20, lowest is 0
     //rimworld style mood breaks?
     //If the happiness is low enough, villagers will refuse to trade. Essentially, say goodbye to
@@ -81,11 +91,12 @@ public class GenericVillagerEntity extends AnimalEntity {
 
 
 
-    public GenericVillagerEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+    public GenericVillagerEntity(EntityType<? extends PassiveEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.2F);
 
-        this.moveControl = new MoveControl(this);
+
+
         this.getNavigation().setCanSwim(true);
 
 
@@ -100,8 +111,27 @@ public class GenericVillagerEntity extends AnimalEntity {
     }
 
     static {
-        SENSORS = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES);
-        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.PATH);
+        SENSORS = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY);
+        MEMORY_MODULES = ImmutableList.of(MemoryModuleType.NEAREST_VISIBLE_PLAYER,
+                MemoryModuleType.LOOK_TARGET,
+                MemoryModuleType.GAZE_COOLDOWN_TICKS,
+                MemoryModuleType.WALK_TARGET,
+                MemoryModuleType.PATH,
+                MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+                MemoryModuleType.NEAREST_HOSTILE,
+                MemoryModuleType.HURT_BY,
+                MemoryModuleType.VISIBLE_MOBS,
+                MemoryModuleType.ATTACK_COOLING_DOWN,
+                MemoryModuleType.ATTACK_TARGET,
+                MemoryModuleType.NEAREST_ATTACKABLE,
+                MemoryModuleType.IS_PANICKING,
+                MemoryModuleType.HOME,
+                MemoryModuleType.ADMIRING_ITEM,
+                MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM,
+                MemoryModuleType.ADMIRING_DISABLED,
+                MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM,
+                MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM,
+                MemoryModuleType.INTERACTION_TARGET);
     }
 
     @Override
@@ -114,6 +144,12 @@ public class GenericVillagerEntity extends AnimalEntity {
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
     }
+
+//    @Nullable
+//    @Override
+//    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+//        return null;
+//    }
 
     //Create the navigation, like the Axolotl
 
@@ -153,7 +189,19 @@ public class GenericVillagerEntity extends AnimalEntity {
         return (Brain<GenericVillagerEntity>) super.getBrain();
     }
 
-// Data Tracker
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+        // Eventually chat messages will be sent here,
+
+
+    }
+
+    protected ItemStack addItem(ItemStack stack) {
+        return this.inventory.addStack(stack);
+    }
+
+    // Data Tracker
 
 
 
@@ -220,6 +268,9 @@ public class GenericVillagerEntity extends AnimalEntity {
         profiler.push("genericVillagerBrainActivityUpdate");
         GenericVillagerBrain.updateActivities(this);
         profiler.pop();
+
+
+
         super.mobTick(world);
     }
 
@@ -233,10 +284,10 @@ public class GenericVillagerEntity extends AnimalEntity {
         super.readCustomDataFromNbt(nbt);
     }
 
-    @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return stack.isIn(ItemTags.SNIFFER_FOOD);
-    }
+//    @Override
+//    public boolean isBreedingItem(ItemStack stack) {
+//        return stack.isIn(ItemTags.SNIFFER_FOOD);
+//    }
 
 
 //    @Override
@@ -293,6 +344,32 @@ public class GenericVillagerEntity extends AnimalEntity {
     public void setHomeLocation(BlockPos pos){
         homeLocation = pos;
     }
+
+    protected void loot(ServerWorld world, ItemEntity itemEntity) {
+        this.triggerItemPickedUpByEntityCriteria(itemEntity);
+        GenericVillagerBrain.loot(world, this, itemEntity);
+    }
+
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ActionResult actionResult = super.interactMob(player, hand);
+        if (actionResult.isAccepted()) {
+            playAmbientSound();
+            return actionResult;
+        } else {
+            playAttackSound();
+            playAttackSound();
+            World var5 = this.getWorld();
+            if (var5 instanceof ServerWorld) {
+                ServerWorld serverWorld = (ServerWorld)var5;
+                return GenericVillagerBrain.playerInteract(serverWorld, this, player, hand);
+            } else {
+                boolean bl = GenericVillagerBrain.isWillingToTrade(this, player.getStackInHand(hand));
+                return (ActionResult)(bl ? ActionResult.SUCCESS : ActionResult.PASS);
+            }
+
+        }
+    }
+
 
 
     //This needs to be re-rewritten this would be incredibly taxing on spawn
@@ -371,7 +448,28 @@ public class GenericVillagerEntity extends AnimalEntity {
         DebugInfoSender.sendBrainDebugData(this);
     }
 
+    //A Temporary function till breeding is worked out
+    public boolean isAdult() {
+        return true;
+    }
+
+    protected void equipToOffHand(ItemStack stack) {
+        if (stack.isOf(GenericVillagerBrain.BARTERING_ITEM)) {
+            this.equipStack(EquipmentSlot.OFFHAND, stack);
+            this.updateDropChances(EquipmentSlot.OFFHAND);
+        } else {
+            this.equipLootStack(EquipmentSlot.OFFHAND, stack);
+        }
+
+    }
+
+    public boolean canGather(ServerWorld world, ItemStack stack) {
+        return world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.canPickUpLoot() && GenericVillagerBrain.canGather(this, stack);
+    }
 
 
-
+    @Override
+    public SimpleInventory getInventory() {
+        return this.inventory;
+    }
 }

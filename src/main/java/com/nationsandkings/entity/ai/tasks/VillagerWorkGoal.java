@@ -1,4 +1,4 @@
-package com.nationsandkings.entity.ai;
+package com.nationsandkings.entity.ai.tasks;
 
 import com.nationsandkings.entity.custom.GenericVillagerEntity;
 import net.minecraft.entity.ai.goal.Goal;
