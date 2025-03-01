@@ -3,5 +3,6 @@
   "item.nationsandkings.generic_villager_spawn_egg": "Villager Spawn Egg",
   "nak_workstations.nationsandkings": "Villager Workstations",
   "nak_decorations.nationsandkings": "Village Decorations",
-  "nak_coins": "Villager Currency"
+  "nak_coins": "Villager Currency",
+  "item.nationsandkings.copper_coin": "Copper Coin"
 }
