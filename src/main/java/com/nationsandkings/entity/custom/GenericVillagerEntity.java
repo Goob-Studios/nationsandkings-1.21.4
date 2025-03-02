@@ -47,6 +47,7 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class GenericVillagerEntity extends PassiveEntity implements InventoryOwner {
@@ -192,6 +193,11 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
     @Override
     public void onDeath(DamageSource damageSource) {
+
+        getInventory();
+        this.inventory.clearToList().forEach((stack) -> {
+            this.inventory.getClass();
+        });
         super.onDeath(damageSource);
         // Eventually chat messages will be sent here,
 
