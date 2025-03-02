@@ -497,4 +497,12 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     public SimpleInventory getInventory() {
         return this.inventory;
     }
+
+    protected void equipToMainHand(ItemStack stack) {
+        this.equipLootStack(EquipmentSlot.MAINHAND, stack);
+    }
+
+    protected void equipLootStack(EquipmentSlot slot, ItemStack stack) {
+        this.equipStack(slot, stack);
+    }
 }

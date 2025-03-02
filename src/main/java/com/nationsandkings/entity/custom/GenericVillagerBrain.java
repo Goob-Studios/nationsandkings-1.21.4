@@ -3,6 +3,7 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.items.ModItems;
@@ -31,6 +32,7 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
@@ -45,6 +47,7 @@ import java.util.Optional;
 public class GenericVillagerBrain  {
 
     public static final Item BARTERING_ITEM;
+
 
 
 
@@ -82,8 +85,8 @@ public class GenericVillagerBrain  {
                 new VillagerMoveToTargetTask(150, 250),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
                 new FleeTask<>(0.5f),
-                VillagerAdmireCoinTask.create(119),
-                VillagerRemoveOffHandItemTask.create()
+                VillagerRemoveOffHandItemTask.create(),
+                VillagerAdmireCoinTask.create(119)
         ));
 
 
@@ -112,7 +115,11 @@ public class GenericVillagerBrain  {
     }
 
     private static void addAdmireItemActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.ADMIRE_ITEM, 10, ImmutableList.of(WalkTowardsNearestVisibleWantedItemTask.create(GenericVillagerBrain::doesNotHaveCurrencyInOffHand, 1.0F, true, 9), WantNewItemTask.create(9), AdmireItemTimeLimitTask.create(200, 200)), MemoryModuleType.ADMIRING_ITEM);
+        brain.setTaskList(Activity.ADMIRE_ITEM, 10, ImmutableList.of(
+                WalkTowardsNearestVisibleWantedItemTask.create(GenericVillagerBrain::doesNotHaveCurrencyInOffHand, 0.5F, true, 9),
+                WantNewItemTask.create(9),
+                AdmireItemTimeLimitTask.create(200, 200)),
+                MemoryModuleType.ADMIRING_ITEM);
     }
 
 
@@ -228,6 +235,9 @@ public class GenericVillagerBrain  {
     }
 
     protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
+
+        NationsAndKings.LOGGER.info("Villager sees dropped item: " + itemEntity.getStack().getItem());
+
         stopWalking(villager);
         ItemStack itemStack;
         if (itemEntity.getStack().isOf(ModItems.COPPER_COINS)) {
@@ -293,7 +303,7 @@ public class GenericVillagerBrain  {
                     doBarter(villager, Collections.singletonList(itemStack2));
                 }
 
-//                villager.equipToMainHand(itemStack);
+                villager.equipToMainHand(itemStack);
             }
         }
 
@@ -338,7 +348,7 @@ public class GenericVillagerBrain  {
     }
 
     protected static boolean isWillingToTrade(GenericVillagerEntity villager, ItemStack itemStack) {
-        return true;
+        return acceptsForBarter(itemStack);
     }
 
     private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
@@ -362,6 +372,12 @@ public class GenericVillagerBrain  {
     protected static boolean canGather(GenericVillagerEntity villager, ItemStack stack) {
         return !villager.isBaby();
     }
+
+
+
+
+
+
 
 
 
