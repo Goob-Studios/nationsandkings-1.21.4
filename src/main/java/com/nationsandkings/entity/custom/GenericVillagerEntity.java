@@ -479,10 +479,13 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     }
 
     protected void equipToOffHand(ItemStack stack) {
+        NationsAndKings.LOGGER.info("Is in entity equipToOffHand");
         if (stack.isOf(GenericVillagerBrain.BARTERING_ITEM)) {
+            NationsAndKings.LOGGER.info("Is in if statck is of Bartering_Item");
             this.equipStack(EquipmentSlot.OFFHAND, stack);
             this.updateDropChances(EquipmentSlot.OFFHAND);
         } else {
+            NationsAndKings.LOGGER.info("Is in EquipmentSlot.Off to equip");
             this.equipLootStack(EquipmentSlot.OFFHAND, stack);
         }
 

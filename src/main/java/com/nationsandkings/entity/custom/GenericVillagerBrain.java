@@ -188,6 +188,7 @@ public class GenericVillagerBrain  {
     //Memory Stuff
 
     private static void setAdmiringItem(LivingEntity entity) {
+        NationsAndKings.LOGGER.info("Set the admiring item properly");
         entity.getBrain().remember(MemoryModuleType.ADMIRING_ITEM, true, 119L);
     }
 
@@ -251,6 +252,7 @@ public class GenericVillagerBrain  {
 
         if (isVillagerCurrency(itemStack)) {
             villager.getBrain().forget(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
+            NationsAndKings.LOGGER.info("in Loot function");
             swapItemWithOffHand(world, villager, itemStack);
             setAdmiringItem(villager);
         } else {
@@ -338,7 +340,7 @@ public class GenericVillagerBrain  {
         ItemStack itemStack = player.getStackInHand(hand);
         if (isWillingToTrade(villager, itemStack)) {
             ItemStack itemStack2 = itemStack.splitUnlessCreative(1, player);
-//            swapItemWithOffHand(world, piglin, itemStack2);
+            swapItemWithOffHand(world, villager, itemStack2);
             setAdmiringItem(villager);
             stopWalking(villager);
             return ActionResult.SUCCESS;
@@ -358,6 +360,9 @@ public class GenericVillagerBrain  {
     //Holding things
 
     private static void swapItemWithOffHand(ServerWorld world, GenericVillagerEntity villager, ItemStack stack) {
+
+        NationsAndKings.LOGGER.info("Swapped Item with offhand");
+
         if (hasItemInOffHand(villager)) {
             villager.dropStack(world, villager.getStackInHand(Hand.OFF_HAND));
         }
