@@ -194,10 +194,14 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     @Override
     public void onDeath(DamageSource damageSource) {
 
-        getInventory();
-        this.inventory.clearToList().forEach((stack) -> {
-            this.inventory.getClass();
-        });
+        World var5 = this.getWorld();
+        if (var5 instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) var5;
+            this.inventory.clearToList().forEach((stack) -> {
+                this.drop(serverWorld, damageSource);
+            });
+        }
+
         super.onDeath(damageSource);
         // Eventually chat messages will be sent here,
 

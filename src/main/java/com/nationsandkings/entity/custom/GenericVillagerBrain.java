@@ -14,9 +14,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.mob.PiglinActivity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -80,7 +82,7 @@ public class GenericVillagerBrain  {
                 new VillagerMoveToTargetTask(150, 250),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
                 new FleeTask<>(0.5f),
-                AdmireItemTask.create(119),
+                VillagerAdmireCoinTask.create(119),
                 VillagerRemoveOffHandItemTask.create()
         ));
 
@@ -99,7 +101,7 @@ public class GenericVillagerBrain  {
 //                Pair.of(0, StrollTask.create(0.5f, 7, 7)),
                 Pair.of(0, makeRandomWanderTask()),
                 Pair.of(1, makeRandomLookTask()),
-                (Pair.of(2, FindInteractionTargetTask.create(EntityType.PLAYER, 4)))
+                Pair.of(2, FindInteractionTargetTask.create(EntityType.PLAYER, 4))
         ));
     }
 
@@ -139,12 +141,14 @@ public class GenericVillagerBrain  {
 
 
 
-        static void updateActivities(GenericVillagerEntity villager) {
+    static void updateActivities(GenericVillagerEntity villager) {
 //        NationsAndKings.LOGGER.info("Attempting to update the activities.");
-            //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
-            // We also need to work on the sleeping activity.
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST, Activity.ADMIRE_ITEM));
+        //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
+        // We also need to work on the sleeping activity.
+    villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST, Activity.ADMIRE_ITEM));
     }
+
+
 
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
         Optional<PlayerEntity> optional = entity.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
@@ -183,7 +187,7 @@ public class GenericVillagerBrain  {
 
     //Bartering Stuff
 
-    protected static boolean isVillagerCurrency(ItemStack stack) {
+    public static boolean isVillagerCurrency(ItemStack stack) {
         return stack.isIn(NKTags.VILLAGER_CURRENCY);
     }
 
@@ -212,7 +216,7 @@ public class GenericVillagerBrain  {
 
     private static void drop(GenericVillagerEntity villager, List<ItemStack> items, Vec3d pos) {
         if (!items.isEmpty()) {
-//            villager.swingHand(Hand.OFF_HAND);
+            villager.swingHand(Hand.OFF_HAND);
             Iterator var3 = items.iterator();
 
             while(var3.hasNext()) {
@@ -226,7 +230,7 @@ public class GenericVillagerBrain  {
     protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
         stopWalking(villager);
         ItemStack itemStack;
-        if (itemEntity.getStack().isOf(Items.COPPER_INGOT)) {
+        if (itemEntity.getStack().isOf(ModItems.COPPER_COINS)) {
             villager.sendPickup(itemEntity, itemEntity.getStack().getCount());
             itemStack = itemEntity.getStack();
             itemEntity.discard();
