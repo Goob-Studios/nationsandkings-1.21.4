@@ -2,6 +2,7 @@
   "type": "minecraft:barter",
   "pools": [
     {
+      "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",

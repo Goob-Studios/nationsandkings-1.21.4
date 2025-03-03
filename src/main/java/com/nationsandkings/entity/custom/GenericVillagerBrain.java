@@ -3,36 +3,27 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.items.ModItems;
 import com.nationsandkings.tags.NKTags;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
-import net.minecraft.entity.mob.PiglinActivity;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
@@ -65,7 +56,6 @@ public class GenericVillagerBrain  {
 //        brain.setDefaultActivity(Activity.CORE);
 //        brain.resetPossibleActivities();
 ////        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
-//        NationsAndKings.LOGGER.info("Created the brain");
 //        return brain;
         addCoreActivities(brain);
         addIdleActivities(brain);
@@ -149,7 +139,6 @@ public class GenericVillagerBrain  {
 
 
     static void updateActivities(GenericVillagerEntity villager) {
-//        NationsAndKings.LOGGER.info("Attempting to update the activities.");
         //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
         // We also need to work on the sleeping activity.
     villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST, Activity.ADMIRE_ITEM));
@@ -188,7 +177,6 @@ public class GenericVillagerBrain  {
     //Memory Stuff
 
     private static void setAdmiringItem(LivingEntity entity) {
-        NationsAndKings.LOGGER.info("Set the admiring item properly");
         entity.getBrain().remember(MemoryModuleType.ADMIRING_ITEM, true, 119L);
     }
 
@@ -237,7 +225,6 @@ public class GenericVillagerBrain  {
 
     protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
 
-        NationsAndKings.LOGGER.info("Villager sees dropped item: " + itemEntity.getStack().getItem());
 
         stopWalking(villager);
         ItemStack itemStack;
@@ -252,7 +239,6 @@ public class GenericVillagerBrain  {
 
         if (isVillagerCurrency(itemStack)) {
             villager.getBrain().forget(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
-            NationsAndKings.LOGGER.info("in Loot function");
             swapItemWithOffHand(world, villager, itemStack);
             setAdmiringItem(villager);
         } else {
@@ -361,7 +347,6 @@ public class GenericVillagerBrain  {
 
     private static void swapItemWithOffHand(ServerWorld world, GenericVillagerEntity villager, ItemStack stack) {
 
-        NationsAndKings.LOGGER.info("Swapped Item with offhand");
 
         if (hasItemInOffHand(villager)) {
             villager.dropStack(world, villager.getStackInHand(Hand.OFF_HAND));
