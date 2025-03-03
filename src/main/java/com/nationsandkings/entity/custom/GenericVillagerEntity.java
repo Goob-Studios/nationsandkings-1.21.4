@@ -19,8 +19,10 @@ import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -38,6 +40,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.profiler.Profilers;
 import net.minecraft.world.GameRules;
@@ -46,6 +49,7 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class GenericVillagerEntity extends PassiveEntity implements InventoryOwner {
@@ -65,7 +69,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
     //the location of each villager's home
     //which is mostly just their bed for now
-    private BlockPos homeLocation;
+    private GlobalPos homeLocation;
 
     private String[] VillagerJobs = new String[5];
 
@@ -102,6 +106,9 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
 
         this.brain = this.getBrain();
+
+
+
         // This is where the No key memories in MapLike[{}]
         //Probably from the ImmutableMap.of that's empty.
 
@@ -191,6 +198,15 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
     @Override
     public void onDeath(DamageSource damageSource) {
+
+        World var5 = this.getWorld();
+        if (var5 instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) var5;
+            this.inventory.clearToList().forEach((stack) -> {
+                this.drop(serverWorld, damageSource);
+            });
+        }
+
         super.onDeath(damageSource);
         // Eventually chat messages will be sent here,
 
@@ -199,6 +215,19 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
     protected ItemStack addItem(ItemStack stack) {
         return this.inventory.addStack(stack);
+    }
+
+    protected void dropEquipment(ServerWorld world, DamageSource source, boolean causedByPlayer) {
+        super.dropEquipment(world, source, causedByPlayer);
+        Entity entity = source.getAttacker();
+
+        this.inventory.clearToList().forEach((stack) -> {
+            this.dropStack(world, stack);
+        });
+    }
+
+    protected boolean canInsertIntoInventory(ItemStack stack) {
+        return this.inventory.canInsert(stack);
     }
 
     // Data Tracker
@@ -252,6 +281,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     @Override
     public void tick(){
         super.tick();
+
     }
 
     @Override
@@ -337,12 +367,13 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     }
 
 
-    public BlockPos getHomeLocation(){
+    public GlobalPos getHomeLocation(){
         return homeLocation;
     }
 
-    public void setHomeLocation(BlockPos pos){
+    public void setHomeLocation(GlobalPos pos){
         homeLocation = pos;
+        this.getBrain().remember(MemoryModuleType.HOME, pos);
     }
 
     protected void loot(ServerWorld world, ItemEntity itemEntity) {
@@ -354,6 +385,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
         ActionResult actionResult = super.interactMob(player, hand);
         if (actionResult.isAccepted()) {
             playAmbientSound();
+            getInventory();
             return actionResult;
         } else {
             playAttackSound();
@@ -372,28 +404,6 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
 
 
-    //This needs to be re-rewritten this would be incredibly taxing on spawn
-    private void findHome(){
-        if(getHomeLocation() == null){
-            BlockPos villagerPos = new BlockPos((int) this.getX(), (int) this.getY(), (int) this.getZ());
-
-            for (int x = -5; x <= 5; x++) {
-                for (int y = -5; y <= 5; y++) {
-                    for (int z = -5; z <= 5; z++) {
-                        BlockPos checkPos = villagerPos.add(x, y, z);
-                        BlockState state = this.getWorld().getBlockState(checkPos);
-                        if (state.getBlock() instanceof BedBlock){
-                            this.setHomeLocation(checkPos);
-                            System.out.println("Found Pos");
-                            x = y = z = 21;
-                        }
-
-                    }
-                }
-            }
-        }
-
-    }
 
     //On hits and being hit
 
@@ -471,5 +481,13 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     @Override
     public SimpleInventory getInventory() {
         return this.inventory;
+    }
+
+    protected void equipToMainHand(ItemStack stack) {
+        this.equipLootStack(EquipmentSlot.MAINHAND, stack);
+    }
+
+    protected void equipLootStack(EquipmentSlot slot, ItemStack stack) {
+        this.equipStack(slot, stack);
     }
 }

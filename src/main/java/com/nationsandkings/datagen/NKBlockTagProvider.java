@@ -21,5 +21,6 @@ public class NKBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.TOWN_HALL);
 
+
     }
 }

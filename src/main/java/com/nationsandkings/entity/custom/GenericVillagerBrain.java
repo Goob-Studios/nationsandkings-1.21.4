@@ -3,32 +3,32 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.items.ModItems;
 import com.nationsandkings.tags.NKTags;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
@@ -46,6 +46,7 @@ public class GenericVillagerBrain  {
 
 
 
+
     protected GenericVillagerBrain(){
     }
 
@@ -60,8 +61,8 @@ public class GenericVillagerBrain  {
 //        brain.setDefaultActivity(Activity.CORE);
 //        brain.resetPossibleActivities();
 ////        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
-//        NationsAndKings.LOGGER.info("Created the brain");
 //        return brain;
+
         addCoreActivities(brain);
         addIdleActivities(brain);
         addRestActivities(brain);
@@ -80,8 +81,8 @@ public class GenericVillagerBrain  {
                 new VillagerMoveToTargetTask(150, 250),
                 new LookAroundTask(UniformIntProvider.create(0, 20), 1.0F, 1.0F, 1.0F),
                 new FleeTask<>(0.5f),
-                AdmireItemTask.create(119),
-                VillagerRemoveOffHandItemTask.create()
+                VillagerRemoveOffHandItemTask.create(),
+                VillagerAdmireCoinTask.create(119)
         ));
 
 
@@ -99,7 +100,7 @@ public class GenericVillagerBrain  {
 //                Pair.of(0, StrollTask.create(0.5f, 7, 7)),
                 Pair.of(0, makeRandomWanderTask()),
                 Pair.of(1, makeRandomLookTask()),
-                (Pair.of(2, FindInteractionTargetTask.create(EntityType.PLAYER, 4)))
+                Pair.of(2, FindInteractionTargetTask.create(EntityType.PLAYER, 4))
         ));
     }
 
@@ -110,7 +111,11 @@ public class GenericVillagerBrain  {
     }
 
     private static void addAdmireItemActivities(Brain<GenericVillagerEntity> brain) {
-        brain.setTaskList(Activity.ADMIRE_ITEM, 10, ImmutableList.of(WalkTowardsNearestVisibleWantedItemTask.create(GenericVillagerBrain::doesNotHaveCurrencyInOffHand, 1.0F, true, 9), WantNewItemTask.create(9), AdmireItemTimeLimitTask.create(200, 200)), MemoryModuleType.ADMIRING_ITEM);
+        brain.setTaskList(Activity.ADMIRE_ITEM, 10, ImmutableList.of(
+                WalkTowardsNearestVisibleWantedItemTask.create(GenericVillagerBrain::doesNotHaveCurrencyInOffHand, 0.5F, true, 9),
+                WantNewItemTask.create(9),
+                AdmireItemTimeLimitTask.create(200, 200)),
+                MemoryModuleType.ADMIRING_ITEM);
     }
 
 
@@ -139,12 +144,13 @@ public class GenericVillagerBrain  {
 
 
 
-        static void updateActivities(GenericVillagerEntity villager) {
-//        NationsAndKings.LOGGER.info("Attempting to update the activities.");
-            //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
-            // We also need to work on the sleeping activity.
-        villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST, Activity.ADMIRE_ITEM));
+    static void updateActivities(GenericVillagerEntity villager) {
+        //Do we need to update whenever the villager is hit? That might be why they're not fighting back.
+        // We also need to work on the sleeping activity.
+    villager.getBrain().resetPossibleActivities(ImmutableList.of(Activity.IDLE, Activity.FIGHT, Activity.REST, Activity.ADMIRE_ITEM));
     }
+
+
 
     public static Optional<LookTarget> getPlayerLookTarget(LivingEntity entity) {
         Optional<PlayerEntity> optional = entity.getBrain().getOptionalMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
@@ -172,6 +178,34 @@ public class GenericVillagerBrain  {
         return !hasPlayerHoldingWantedItemNearby(villager);
     }
 
+    //Home
+
+    //This needs to be re-rewritten this would be incredibly taxing on spawn
+    public static void findHome(GenericVillagerEntity villager){
+        if(villager.getHomeLocation() == null){
+            BlockPos villagerPos = new BlockPos((int) villager.getX(), (int) villager.getY(), (int) villager.getZ());
+
+            for (int x = -5; x <= 5; x++) {
+                for (int y = -5; y <= 5; y++) {
+                    for (int z = -5; z <= 5; z++) {
+                        BlockPos checkPos = villagerPos.add(x, y, z);
+                        BlockState state = villager.getWorld().getBlockState(checkPos);
+                        if (state.getBlock() instanceof BedBlock){
+                            if (villager.getWorld() instanceof ServerWorld serverWorld) {
+                                GlobalPos homePos = GlobalPos.create(serverWorld.getRegistryKey(), checkPos);
+                                villager.setHomeLocation(homePos);
+                            }
+                            NationsAndKings.LOGGER.info("Found Bed");
+                            x = y = z = 21;
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }
+
 
 
     //Memory Stuff
@@ -183,7 +217,7 @@ public class GenericVillagerBrain  {
 
     //Bartering Stuff
 
-    protected static boolean isVillagerCurrency(ItemStack stack) {
+    public static boolean isVillagerCurrency(ItemStack stack) {
         return stack.isIn(NKTags.VILLAGER_CURRENCY);
     }
 
@@ -212,7 +246,7 @@ public class GenericVillagerBrain  {
 
     private static void drop(GenericVillagerEntity villager, List<ItemStack> items, Vec3d pos) {
         if (!items.isEmpty()) {
-//            villager.swingHand(Hand.OFF_HAND);
+            villager.swingHand(Hand.OFF_HAND);
             Iterator var3 = items.iterator();
 
             while(var3.hasNext()) {
@@ -224,6 +258,8 @@ public class GenericVillagerBrain  {
     }
 
     protected static void loot(ServerWorld world, GenericVillagerEntity villager, ItemEntity itemEntity) {
+
+
         stopWalking(villager);
         ItemStack itemStack;
         if (itemEntity.getStack().isOf(ModItems.COPPER_COINS)) {
@@ -239,6 +275,11 @@ public class GenericVillagerBrain  {
             villager.getBrain().forget(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
             swapItemWithOffHand(world, villager, itemStack);
             setAdmiringItem(villager);
+        } else {
+            boolean bl = !villager.tryEquip(world, itemStack).equals(ItemStack.EMPTY);
+            if (!bl) {
+                barterItem(villager, itemStack);
+            }
         }
     }
 
@@ -284,7 +325,7 @@ public class GenericVillagerBrain  {
                     doBarter(villager, Collections.singletonList(itemStack2));
                 }
 
-//                villager.equipToMainHand(itemStack);
+                villager.equipToMainHand(itemStack);
             }
         }
 
@@ -319,7 +360,7 @@ public class GenericVillagerBrain  {
         ItemStack itemStack = player.getStackInHand(hand);
         if (isWillingToTrade(villager, itemStack)) {
             ItemStack itemStack2 = itemStack.splitUnlessCreative(1, player);
-//            swapItemWithOffHand(world, piglin, itemStack2);
+            swapItemWithOffHand(world, villager, itemStack2);
             setAdmiringItem(villager);
             stopWalking(villager);
             return ActionResult.SUCCESS;
@@ -329,7 +370,7 @@ public class GenericVillagerBrain  {
     }
 
     protected static boolean isWillingToTrade(GenericVillagerEntity villager, ItemStack itemStack) {
-        return true;
+        return acceptsForBarter(itemStack);
     }
 
     private static boolean hasPlayerHoldingWantedItemNearby(LivingEntity entity) {
@@ -339,6 +380,8 @@ public class GenericVillagerBrain  {
     //Holding things
 
     private static void swapItemWithOffHand(ServerWorld world, GenericVillagerEntity villager, ItemStack stack) {
+
+
         if (hasItemInOffHand(villager)) {
             villager.dropStack(world, villager.getStackInHand(Hand.OFF_HAND));
         }
@@ -353,6 +396,12 @@ public class GenericVillagerBrain  {
     protected static boolean canGather(GenericVillagerEntity villager, ItemStack stack) {
         return !villager.isBaby();
     }
+
+
+
+
+
+
 
 
 
