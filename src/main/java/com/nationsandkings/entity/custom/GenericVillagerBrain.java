@@ -3,10 +3,13 @@ package com.nationsandkings.entity.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.nationsandkings.NationsAndKings;
 import com.nationsandkings.entity.Entities;
 import com.nationsandkings.entity.ai.tasks.*;
 import com.nationsandkings.items.ModItems;
 import com.nationsandkings.tags.NKTags;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +27,8 @@ import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
@@ -57,6 +62,7 @@ public class GenericVillagerBrain  {
 //        brain.resetPossibleActivities();
 ////        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
 //        return brain;
+
         addCoreActivities(brain);
         addIdleActivities(brain);
         addRestActivities(brain);
@@ -170,6 +176,34 @@ public class GenericVillagerBrain  {
 
     private static boolean canWander(LivingEntity villager) {
         return !hasPlayerHoldingWantedItemNearby(villager);
+    }
+
+    //Home
+
+    //This needs to be re-rewritten this would be incredibly taxing on spawn
+    public void findHome(GenericVillagerEntity villager){
+        if(villager.getHomeLocation() == null){
+            BlockPos villagerPos = new BlockPos((int) villager.getX(), (int) villager.getY(), (int) villager.getZ());
+
+            for (int x = -5; x <= 5; x++) {
+                for (int y = -5; y <= 5; y++) {
+                    for (int z = -5; z <= 5; z++) {
+                        BlockPos checkPos = villagerPos.add(x, y, z);
+                        BlockState state = villager.getWorld().getBlockState(checkPos);
+                        if (state.getBlock() instanceof BedBlock){
+                            if (villager.getWorld() instanceof ServerWorld serverWorld) {
+                                GlobalPos homePos = GlobalPos.create(serverWorld.getRegistryKey(), checkPos);
+                                villager.setHomeLocation(homePos);
+                            }
+                            NationsAndKings.LOGGER.info("Found Bed");
+                            x = y = z = 21;
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
 
 
