@@ -107,6 +107,8 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
         this.brain = this.getBrain();
 
+
+
         // This is where the No key memories in MapLike[{}]
         //Probably from the ImmutableMap.of that's empty.
 
@@ -279,6 +281,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     @Override
     public void tick(){
         super.tick();
+
     }
 
     @Override

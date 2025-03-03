@@ -181,7 +181,7 @@ public class GenericVillagerBrain  {
     //Home
 
     //This needs to be re-rewritten this would be incredibly taxing on spawn
-    public void findHome(GenericVillagerEntity villager){
+    public static void findHome(GenericVillagerEntity villager){
         if(villager.getHomeLocation() == null){
             BlockPos villagerPos = new BlockPos((int) villager.getX(), (int) villager.getY(), (int) villager.getZ());
 
