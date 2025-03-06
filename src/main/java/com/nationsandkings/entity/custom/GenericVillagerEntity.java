@@ -56,6 +56,8 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     
     public static final Set<Block> INTERACT_BLOCKS = null;
 
+    String job = "farmer";
+
     //Memory/Brain stuff
 
     protected static final ImmutableList<? extends MemoryModuleType<?>> MEMORY_MODULES;
@@ -110,7 +112,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
         int randJob = (int) (Math.random() * (5 - 0));
 
-        setJob(temp_jobs[randJob]);
+        setJob(this, temp_jobs[randJob]);
 
 
 

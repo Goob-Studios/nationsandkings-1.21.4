@@ -5,16 +5,15 @@ import net.minecraft.loot.LootTables;
 
 public interface EmploymentHaver {
     
-    String job = "farmer";
-    
-    public default String getJob(){
+
+    default String getJob(GenericVillagerEntity villager){
         
-        return job;
+        return villager.job;
     }
 
-    public default void setJob(String newName){
+    default void setJob(GenericVillagerEntity villager, String newName){
 
-        newName = job;
+        villager.job = newName;
     }
 
     public default LootTable getJobLoot(String jobName, GenericVillagerEntity villager){

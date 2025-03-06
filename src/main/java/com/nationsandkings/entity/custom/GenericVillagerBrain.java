@@ -297,7 +297,7 @@ public class GenericVillagerBrain implements EmploymentHaver{
 
     private static List<ItemStack> getBarteredItem(GenericVillagerEntity villager) {
 //        LootTable lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.VILLAGE_PLAINS_CHEST);
-        LootTable lootTable = villager.getJobLoot(villager.getJob(), villager);
+        LootTable lootTable = villager.getJobLoot(villager.getJob(villager), villager);
         List<ItemStack> list = lootTable.generateLoot((new LootWorldContext.Builder((ServerWorld)villager.getWorld())).add(LootContextParameters.THIS_ENTITY, villager).build(LootContextTypes.BARTER));
         return list;
     }
