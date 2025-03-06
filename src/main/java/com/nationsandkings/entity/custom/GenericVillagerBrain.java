@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class GenericVillagerBrain  {
+public class GenericVillagerBrain implements EmploymentHaver{
 
     public static final Item BARTERING_ITEM;
 
@@ -296,7 +296,8 @@ public class GenericVillagerBrain  {
     }
 
     private static List<ItemStack> getBarteredItem(GenericVillagerEntity villager) {
-        LootTable lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.VILLAGE_PLAINS_CHEST);
+//        LootTable lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.VILLAGE_PLAINS_CHEST);
+        LootTable lootTable = villager.getJobLoot(villager.getJob(), villager);
         List<ItemStack> list = lootTable.generateLoot((new LootWorldContext.Builder((ServerWorld)villager.getWorld())).add(LootContextParameters.THIS_ENTITY, villager).build(LootContextTypes.BARTER));
         return list;
     }

@@ -52,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Set;
 
-public class GenericVillagerEntity extends PassiveEntity implements InventoryOwner {
+public class GenericVillagerEntity extends PassiveEntity implements InventoryOwner, EmploymentHaver {
     
     public static final Set<Block> INTERACT_BLOCKS = null;
 
@@ -91,6 +91,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     //Sleeptime is value 0
     //happiness is value 1
     private int[] VillagerArray = new int[5];
+
 
 
 
@@ -384,12 +385,8 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ActionResult actionResult = super.interactMob(player, hand);
         if (actionResult.isAccepted()) {
-            playAmbientSound();
-            getInventory();
             return actionResult;
         } else {
-            playAttackSound();
-            playAttackSound();
             World var5 = this.getWorld();
             if (var5 instanceof ServerWorld) {
                 ServerWorld serverWorld = (ServerWorld)var5;
