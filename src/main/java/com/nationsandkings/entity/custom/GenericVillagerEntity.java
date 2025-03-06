@@ -108,6 +108,10 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
         this.getNavigation().setCanSwim(true);
 
+        int randJob = (int) (Math.random() * (5 - 0));
+
+        setJob(temp_jobs[randJob]);
+
 
 
         this.brain = this.getBrain();
