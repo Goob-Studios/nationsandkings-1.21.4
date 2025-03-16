@@ -182,28 +182,7 @@ public class GenericVillagerBrain implements EmploymentHaver{
 
     //This needs to be re-rewritten this would be incredibly taxing on spawn
     public static void findHome(GenericVillagerEntity villager){
-        if(villager.getHomeLocation() == null){
-            BlockPos villagerPos = new BlockPos((int) villager.getX(), (int) villager.getY(), (int) villager.getZ());
-
-            for (int x = -5; x <= 5; x++) {
-                for (int y = -5; y <= 5; y++) {
-                    for (int z = -5; z <= 5; z++) {
-                        BlockPos checkPos = villagerPos.add(x, y, z);
-                        BlockState state = villager.getWorld().getBlockState(checkPos);
-                        if (state.getBlock() instanceof BedBlock){
-                            if (villager.getWorld() instanceof ServerWorld serverWorld) {
-                                GlobalPos homePos = GlobalPos.create(serverWorld.getRegistryKey(), checkPos);
-                                villager.setHomeLocation(homePos);
-                            }
-                            NationsAndKings.LOGGER.info("Found Bed");
-                            x = y = z = 21;
-                        }
-
-                    }
-                }
-            }
-        }
-
+        villager.getHome(villager);
     }
 
 
