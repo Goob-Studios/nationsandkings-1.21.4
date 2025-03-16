@@ -59,7 +59,6 @@ public interface EmploymentHaver {
     }
 
     default GlobalPos getHome(GenericVillagerEntity villager){
-
         if(villager.getHomeLocation() == null){
             BlockPos villagerPos = new BlockPos((int) villager.getX(), (int) villager.getY(), (int) villager.getZ());
 

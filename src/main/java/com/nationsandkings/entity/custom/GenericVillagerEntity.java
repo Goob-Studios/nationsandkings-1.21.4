@@ -78,6 +78,10 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
     //This is temporary
     private static String[] temp_jobs = {"farmer", "woodcutter", "mason", "butcher", "fisherman", "builder"};
 
+    private int level;
+
+    private int xp;
+
 
 
 
