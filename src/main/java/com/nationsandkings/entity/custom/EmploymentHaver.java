@@ -43,6 +43,7 @@ public interface EmploymentHaver {
             case "builder":
                 lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.HERO_OF_THE_VILLAGE_LIBRARIAN_GIFT_GAMEPLAY);
                 break;
+            // We also need a way for a villager to not have a job - and throw out no loot. Or maybe useless loot?
             default:
                 lootTable = villager.getWorld().getServer().getReloadableRegistries().getLootTable(LootTables.UNDERWATER_RUIN_SMALL_CHEST);
         }
@@ -87,13 +88,17 @@ public interface EmploymentHaver {
     default void onTrade(GenericVillagerEntity villager){
 
 
-        if(villager.getXp() == 1000){
+        villager.setXp(villager.getXp() + (int) (Math.random() * (100 - 10 + 1) + 100));
+        NationsAndKings.LOGGER.info("Gained XP!");
+        if(villager.getXp() >= 1000){
             levelUp(villager);
+
         }
     }
 
     default void levelUp(GenericVillagerEntity villager){
-
+        NationsAndKings.LOGGER.info("Leveled Up!");
+        villager.setXp(0);
     }
     
 }

@@ -201,6 +201,7 @@ public class GenericVillagerBrain implements EmploymentHaver{
     }
 
     private static void barterItem(GenericVillagerEntity villager, ItemStack stack) {
+
         ItemStack itemStack = villager.addItem(stack);
         dropBarteredItem(villager, Collections.singletonList(itemStack));
     }
@@ -216,7 +217,10 @@ public class GenericVillagerBrain implements EmploymentHaver{
     }
 
     private static void dropBarteredItem(GenericVillagerEntity villager, List<ItemStack> items) {
+
         drop(villager, items, findGround(villager));
+        //Just calling this here temporarly
+        villager.onTrade(villager);
     }
 
     private static void dropBarteredItem(GenericVillagerEntity villager, PlayerEntity player, List<ItemStack> items) {
