@@ -80,7 +80,7 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
     private int level;
 
-    private int xp;
+    int xp;
 
 
 
@@ -500,5 +500,21 @@ public class GenericVillagerEntity extends PassiveEntity implements InventoryOwn
 
     protected void equipLootStack(EquipmentSlot slot, ItemStack stack) {
         this.equipStack(slot, stack);
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    public int getXp() {
+        return xp;
     }
 }

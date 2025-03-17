@@ -83,5 +83,17 @@ public interface EmploymentHaver {
         }
     return null;
     }
+
+    default void onTrade(GenericVillagerEntity villager){
+
+
+        if(villager.getXp() == 1000){
+            levelUp(villager);
+        }
+    }
+
+    default void levelUp(GenericVillagerEntity villager){
+
+    }
     
 }
